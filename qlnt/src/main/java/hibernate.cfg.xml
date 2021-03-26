@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/t2d_gis</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.default_catalog">t2d_gis</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.search.autoregister_listeners">true</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <mapping class="com.dsc.qlnt.model.XaPhuong" />
+        <mapping class="com.dsc.qlnt.model.TinhTp" />
+        <mapping class="com.dsc.qlnt.model.QuanHuyen" />
+        <mapping class="com.dsc.qlnt.model.TinhTrang" />
+        <mapping class="com.dsc.qlnt.model.NguoiDung" />
+        <mapping class="com.dsc.qlnt.model.GiaThue" />
+        <mapping class="com.dsc.qlnt.model.KhuTro" />
+        <mapping class="com.dsc.qlnt.model.LoaiPhong" />
+        <mapping class="com.dsc.qlnt.model.Truong" />
+        <mapping class="com.dsc.qlnt.model.Menu" />
+        <mapping class="com.dsc.qlnt.model.ChuKhuTro" />
+        <mapping class="com.dsc.qlnt.model.VaiTro" />
+        <mapping class="com.dsc.qlnt.model.KhoangCach" />
+        <mapping class="com.dsc.qlnt.model.PhongTro" />
+    </session-factory>
+</hibernate-configuration>

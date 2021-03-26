@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.org/dtd/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-name="chu_khu_tro"/>
+  <table-filter match-name="gia_thue"/>
+  <table-filter match-name="khoang_cach"/>
+  <table-filter match-name="khu_tro"/>
+  <table-filter match-name="loai_phong"/>
+  <table-filter match-name="menu"/>
+  <table-filter match-name="menu_vai_tro"/>
+  <table-filter match-name="nguoi_dung"/>
+  <table-filter match-name="phong_tro"/>
+  <table-filter match-name="quan_huyen"/>
+  <table-filter match-name="tinh_tp"/>
+  <table-filter match-name="tinh_trang"/>
+  <table-filter match-name="truong"/>
+  <table-filter match-name="vai_tro"/>
+  <table-filter match-name="xa_phuong"/>
+</hibernate-reverse-engineering>
