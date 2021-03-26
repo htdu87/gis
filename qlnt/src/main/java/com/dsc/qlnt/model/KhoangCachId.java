@@ -1,5 +1,5 @@
 package com.dsc.qlnt.model;
-// Generated Mar 26, 2021 10:06:33 PM by Hibernate Tools 4.3.5.Final
+// Generated Mar 27, 2021 12:16:42 AM by Hibernate Tools 4.3.5.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

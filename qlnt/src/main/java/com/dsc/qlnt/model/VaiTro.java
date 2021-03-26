@@ -1,5 +1,7 @@
 package com.dsc.qlnt.model;
-// Generated Mar 26, 2021 10:06:33 PM by Hibernate Tools 4.3.5.Final
+// Generated Mar 27, 2021 12:16:42 AM by Hibernate Tools 4.3.5.Final
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,6 +62,7 @@ public class VaiTro implements java.io.Serializable {
 		this.tenVaiTro = tenVaiTro;
 	}
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vaiTro")
 	public Set<NguoiDung> getNguoiDungs() {
 		return this.nguoiDungs;
@@ -69,6 +72,7 @@ public class VaiTro implements java.io.Serializable {
 		this.nguoiDungs = nguoiDungs;
 	}
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "menu_vai_tro", joinColumns = {
 			@JoinColumn(name = "ID_VAI_TRO", nullable = false, updatable = false) }, inverseJoinColumns = {
