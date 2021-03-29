@@ -26,7 +26,7 @@ public class XaPhuong implements java.io.Serializable {
 	private Integer idXaPhuong;
 	private QuanHuyen quanHuyen;
 	private String tenXaPhuong;
-	private byte[] polygon;
+	private String polygon;
 	private Set<KhuTro> khuTros = new HashSet<KhuTro>(0);
 	private Set<Truong> truongs = new HashSet<Truong>(0);
 
@@ -38,7 +38,7 @@ public class XaPhuong implements java.io.Serializable {
 		this.tenXaPhuong = tenXaPhuong;
 	}
 
-	public XaPhuong(QuanHuyen quanHuyen, String tenXaPhuong, byte[] polygon, Set<KhuTro> khuTros, Set<Truong> truongs) {
+	public XaPhuong(QuanHuyen quanHuyen, String tenXaPhuong, String polygon, Set<KhuTro> khuTros, Set<Truong> truongs) {
 		this.quanHuyen = quanHuyen;
 		this.tenXaPhuong = tenXaPhuong;
 		this.polygon = polygon;
@@ -58,6 +58,7 @@ public class XaPhuong implements java.io.Serializable {
 		this.idXaPhuong = idXaPhuong;
 	}
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_QUAN_HUYEN", nullable = false)
 	public QuanHuyen getQuanHuyen() {
@@ -78,11 +79,11 @@ public class XaPhuong implements java.io.Serializable {
 	}
 
 	@Column(name = "POLYGON")
-	public byte[] getPolygon() {
+	public String getPolygon() {
 		return this.polygon;
 	}
 
-	public void setPolygon(byte[] polygon) {
+	public void setPolygon(String polygon) {
 		this.polygon = polygon;
 	}
 
