@@ -5,18 +5,24 @@
 			data:[],
 			footer:[],
 			height:'300px',
-			class:'table table-bordered table-condensed table-hover',
+			class:'table table-bordered table-striped table-hover',
 			extclass:'',
 			border:{'border':'1px solid #d2d6de'},
 			shwfooter:false,
-			decsym:'.',
-			thosym:',',
-			decnum:2,
+			decsym:',',
+			thosym:'.',
+			decnum:0,
 			dateformat:'dd/mm/yyyy hh:MM:ss',
+			shwno:false,
+			nocss:{},
+			nolabel:'TT',
+			page:1,
+			rowonpage:0,
 			onRowSelected:function(){},
 			onCellCommit:function(){},
 			onCellCommiting:function(){return true;},
-			onRowDoubleClick:function(){}
+			onRowDoubleClick:function(){},
+			onDataUpdated:function(){}
 		};
 		var settings=$.extend({},defaults,options);
 		return this.each(function(){
@@ -26,7 +32,7 @@
 					settings.data=data;
 					$(this.element).find('table tbody').remove();
 					$(this.element).find('table').append(genTableBody());
-					//regEvent(this.element);
+					regEvent(this.element);
 					//adjColums(this.element);
 				},
 				clearData:function(){
@@ -37,17 +43,17 @@
 				},
 				addRow:function(row){
 					settings.data.push(row);
-					$(this.element).find('table tbody').append(genTableRow(row));
+					$(this.element).find('table tbody').append(genTableRow(settings.data.length-1, row));
 					regEvent(this.element);
-					adjColums(this.element);
+					//adjColums(this.element);
 				},
 				removeRow:function(i){
 					settings.data.splice(i,1);
 					$(this.element).find('table tbody tr:eq('+i+')').remove();
-					adjColums(this.element);
+					//adjColums(this.element);
 				},
 				refresh:function(){
-					adjColums(this.element);
+					//adjColums(this.element);
 				},
 				setFooter:function(footer){
 					if(settings.shwfooter){
@@ -60,7 +66,7 @@
 						}else{
 							$(this.element).find('table tfoot').append(genFooterRow(footer));
 						}
-						adjColums(this.element);
+						//adjColums(this.element);
 					}
 				},
 				getSelectedRow:function(){
@@ -76,39 +82,68 @@
 				updateRow:function(row,i){
 					if(i>=0){
 						settings.data[i]=row;
-						$(this.element).find('table tbody tr:eq('+i+')').replaceWith(genTableRow(row));
+						$(this.element).find('table tbody tr:eq('+i+')').replaceWith(genTableRow(i,row));
 						regEvent(this.element);
-						adjColums(this.element);
+						//adjColums(this.element);
 					}
 				},
 				getCellValue:function(rowIndex,colName){
 					return settings.data[rowIndex][colName];
 				},
-				setCellValue:function(rowIndex,colName,val){
+				setCellValue:function(rowIndex,colName,val,refresh){
 					settings.data[rowIndex][colName]=val;
 					row=settings.data[rowIndex];
-					this.updateRow(row,rowIndex);
+					if(refresh)this.updateRow(row,rowIndex);
+					settings.onDataUpdated();
+				},
+				setCellContent:function(rowIndex,colIndex,val){
+                    settings.data[rowIndex][colIndex]=val;
+                    $(this.element).find('table tbody tr:eq('+rowIndex+') td:eq('+(settings.shwno?colIndex+1:colIndex)+')').html(genTableCellValue(colIndex, val));
+                    settings.onDataUpdated();
+                },
+				setPage:function(page) {
+				    settings.page=page;
+				},
+				setRowOnPage:function(num) {
+				    settings.rowonpage=num;
+				},
+				addColumns: function(cols) {
+				    if(Array.isArray(cols)){
+				        settings.columns.push.apply(settings.columns,cols);
+				    } else {
+				        settings.columns.push(cols);
+				    }
+                    $(this.element).find('table thead tr').remove();
+                    $(this.element).find('table thead').append(genTableColumnHeader);
+				},
+				remColumn: function(colName) {
+                    var idx=-1;
+                    $.each(settings.columns, function(i, col) {
+                        if(col.name==colName) {
+                            idx=i;
+                            return false;
+                        }
+                    });
+
+                    if(idx>=0) {
+                        settings.columns.splice(idx,1);
+                        $.each($(this.element).find('table tr'),function(i, tr) {
+                            $(this).children('td:eq('+settings.shwno?idx+1:idx+')').remove();
+                        });
+                    }
 				}
 			};
+
+			$(this).removeData('jdgrid');
+			$(this).find('table').remove();
 			$(this).data('jdgrid',jdgrid);
-            $(this).addClass('jdgrid').css(settings.border).height(settings.height);
+            $(this).addClass('jdgrid');//.css(settings.border).height(settings.height);
 
             var tbl=$('<table/>').addClass(settings.class).addClass(settings.extclass);
 
             // Generate header
             var thead=$('<thead/>');
-            var trhead=$('<tr/>');
-            $.each(settings.columns,function(i,colm){
-                if(colm.title!=undefined){
-                    var th=$('<th/>');
-                    th.html(colm.title);
-                    if(colm.css!=undefined){
-                        th.css(colm.css);
-                    }
-                    trhead.append(th);
-                }
-            });
-            thead.append(trhead);
+            thead.append(genTableColumnHeader);
             tbl.append(thead);
 
             // Generate body
@@ -120,17 +155,51 @@
 		function debug(){
 			console.log(settings);
 		}
-		
+
+		function genTableColumnHeader() {
+            var trhead=$('<tr/>');
+
+            if(settings.shwno) {
+                var th=$('<th/>');
+                th.html(settings.nolabel);
+                var css=Object.assign({}, settings.nocss);
+                delete css["text-align"];
+                th.css(css);
+                trhead.append(th);
+            }
+
+            $.each(settings.columns,function(i,colm){
+                if(colm.title!=undefined){
+                    var th=$('<th/>');
+                    th.html(colm.title);
+                    if(colm.css!=undefined){
+                        var css=Object.assign({}, colm.css);
+                        delete css["text-align"];
+                        th.css(css);
+                    }
+                    trhead.append(th);
+                }
+            });
+            return trhead;
+		}
+
 		function genTableBody(){
 			var tblBodyBody=$('<tbody/>');
 			$.each(settings.data,function(i,row){
-				tblBodyBody.append(genTableRow(row));
+				tblBodyBody.append(genTableRow(i,row));
 			});
 			return tblBodyBody;
 		}
 		
-		function genTableRow(row){
+		function genTableRow(index,row){
 			var tr=$('<tr/>');
+
+			if(settings.shwno) {
+                var td=$('<td/>').css(settings.nocss);
+                td.html((settings.page*settings.rowonpage-settings.rowonpage)+1+index);
+                tr.append(td);
+            }
+
 			$.each(settings.columns,function(j,colm){
 				var td=$('<td/>');
 				switch(colm.type){
@@ -139,14 +208,17 @@
 						break;
 					case 'check':
 						var checked=row[colm.name]==true||row[colm.name]==1||row[colm.name]=='1'?'checked="checked"':'';
-						td.html('<input type="checkbox" disabled="disabled" '+checked+'/>');
+						td.html('<input type="checkbox" onclick="return false" '+checked+'/>');
 						break;
 					case 'interval':
 						td.html(milisec2Date(row[colm.name]));
 						break;
 					case 'interval-wt':
-						td.html(milisec2DateWithoutTime(row[colm.name]));
+						td.html(row[colm.name]==null?'':milisec2DateWithoutTime(row[colm.name]));
 						break
+                    case 'textbox':
+                        td.html('<input type="text" class="form-control input-sm jdgrid-input" value="'+row[colm.name]+'" '+(row['disable']?'disabled':'')+' style="text-align:inherit">');
+						break;
 					default:
 						td.html(colm.format?formatNum(row[colm.name],settings.decnum,settings.decsym,settings.thosym):row[colm.name]);
 				}
@@ -160,6 +232,26 @@
 				tr.append(td);
 			});
 			return tr;
+		}
+
+		function genTableCellValue(colIndex, val) {
+		    var colm=settings.columns[colIndex];
+		    switch(colm.type){
+                case 'control':
+                    return val;
+                case 'check':
+                    var checked=val==true||val==1||val=='1'?'checked="checked"':'';
+                    return '<input type="checkbox" onclick="return false" '+checked+'/>';
+                case 'interval':
+                    return milisec2Date(val);
+                case 'interval-wt':
+                    return milisec2DateWithoutTime(val);
+                case 'textbox':
+                    return '<input type="text" class="form-control input-sm jdgrid-input" value="'+val+'" style="text-align:inherit"/>';
+                    break;
+                default:
+                    return colm.format?formatNum(val,settings.decnum,settings.decsym,settings.thosym):val;
+            }
 		}
 		
 		function genFooterRow(footer){
@@ -177,37 +269,40 @@
 			return tr;
 		}
 		
-		function adjColums(dom){
+		/*function adjColums(dom){
 			$(dom).find('.jdgrid-body-wrapper table thead tr:first th').each(function(i,td){
 				$(dom).find('.jdgrid-header-wrapper table thead tr th:eq('+i+'),.jdgrid-footer-wrapper table tfoot tr td:eq('+i+')').outerWidth($(td).outerWidth());
 			});
-		}
+		}*/
 		
 		function clrData(dom){
 			settings.data=[];
-			$(dom).find('.jdgrid-body-wrapper table tbody tr').remove();
+			$(dom).find('table tbody tr').remove();
 		}
 		
 		function regEvent(dom){
-			$(dom).find('.jdgrid-body-wrapper table tbody tr').off('click').on('click',function(){
+			// Row click
+			$(dom).find('table tbody tr').off('click').on('click',function(){
 				//debug();
-				$(dom).find('.jdgrid-body-wrapper table tbody tr').removeClass('actived');
+				$(dom).find('table tbody tr').removeClass('actived');
 				$(this).addClass('actived');
 				settings.onRowSelected(settings.data[$(this).index()]);
 			});
-			
-			$(dom).find('.jdgrid-body-wrapper table tbody tr').off('dblclick').on('dblclick',function(){
+
+			// Row double click
+			$(dom).find('table tbody tr').off('dblclick').on('dblclick',function(){
 				settings.onRowDoubleClick(settings.data[$(this).index()]);
 			});
-			
-			$(dom).find('.jdgrid-body-wrapper table tbody tr td.editable').off('dblclick').on('dblclick',function(){
+
+			// Cell editable double click
+			$(dom).find('table tbody tr td.editable').off('dblclick').on('dblclick',function(){
 				//debug();
 				var row = $(this).parent().index();
 				var col = $(this).index();
 				var inpt=$('<input type="text"/>');
 				inpt.css({'color':'#000'}).val(settings.data[row][settings.columns[col]['name']]).width($(this).width()-4).height($(this).height()-1);
 				$(this).html(inpt);
-				adjColums(dom);
+				//adjColums(dom);
 				inpt.select();
 				inpt.keypress(function(e){
 					if(e.which==13){
@@ -215,7 +310,7 @@
 						if(settings.onCellCommiting(val,row,col)){
 							settings.data[row][settings.columns[col]['name']]=$(this).val();
 							$(this).parent().html(val);
-							adjColums(dom);
+							//adjColums(dom);
 							settings.onCellCommit($(this).val(),row,col);
 						}else{
 							$(this).parent().html(settings.data[row][settings.columns[col]['name']]);
@@ -223,6 +318,33 @@
 					}
 				});
 			});
+
+			// Cell text box focus out
+			$(dom).find('table tbody tr td input.jdgrid-input').off('focusout').on('focusout',function(){
+                //debug();
+                var row = $(this).parent().parent().index();
+                var col = $(this).parent().index();
+                if(settings.shwno) {
+                    col=col-1;
+                }
+                settings.data[row][settings.columns[col]['name']]=$(this).val();
+                settings.onCellCommit($(this).val(),row,col);
+                settings.onDataUpdated();
+            });
+
+            // Cell text box enter press
+            $(dom).find('table tbody tr td input.jdgrid-input').off('keypress').on('keypress',function(e){
+                //debug();
+                if(e.which==13) {
+                    var row = $(this).parent().parent();
+                    var textbox=row.next().find('.jdgrid-input');
+                    if(textbox.length>0) {
+                        textbox.select();
+                    } else {
+                        $(this).focusout();
+                    }
+                }
+            });
 		}
 		
 		function formatNum(n,c,d,t){

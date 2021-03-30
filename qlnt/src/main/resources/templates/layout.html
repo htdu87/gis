@@ -4,11 +4,11 @@
   <base href="/">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title th:text="${MODEL.title}+' | Hệ Thống Quản Lý'"></title>
+  <title th:text="${MODEL.title}+' | Hệ Thống Quản Lý Nhà Trọ'"></title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- shortcut icon -->
-  <link rel="shortcut icon" href="/dist/img/fav.ico">
+  <link rel="shortcut icon" href="/dist/img/fav.png">
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -38,7 +38,7 @@
   <!--<link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">-->
 
-  <script src="bower_components/angular/angular.min.js"></script>
+  <!--<script src="bower_components/angular/angular.min.js"></script>-->
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -69,9 +69,9 @@ desired effect
     <!-- Logo -->
     <a href="." class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><img src="/dist/img/vnpt-logo-white.png"></span>
+      <span class="logo-mini"><img src="/dist/img/marker.png"></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><img src="/dist/img/vnpt-logo-white.png"/> My <b>BTS</b><sup>&trade;</sup></span>
+      <span class="logo-lg"><img src="/dist/img/marker.png"/> QL NHÀ TRỌ</span>
     </a>
 
     <!-- Header Navbar -->
@@ -187,7 +187,7 @@ desired effect
       Phiên bản <span th:text="${@environment.getProperty('app.version')}"></span>
     </div>
     <!-- Default to the left -->
-    <span><span th:text="'&copy; '+${#dates.year(#dates.createNow())}"></span> <a href="http://giaiphapsocm.com" target="_blank">DSC.,Ltd</a></span>
+    <span><span th:text="'&copy; '+${#dates.year(#dates.createNow())}"></span> &bull; THẢO - DƯ - ĐỨC</span>
   </footer>
 
 </div>
