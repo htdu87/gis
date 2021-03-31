@@ -21,7 +21,19 @@ public class XaPhuongServiceImp implements XaPhuongService {
     }
 
     @Override
+    public List<XaPhuong> layDsXaPhuong(Integer idQuanHuyen) {
+        List<XaPhuong> target = new ArrayList<>();
+        xaPhuongRepo.LayDsTheoQuanHuyen(idQuanHuyen).forEach(target::add);
+        return target;
+    }
+
+    @Override
     public XaPhuong layXaPhuongTheoId(Integer id) {
         return xaPhuongRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public boolean kiemTraViTri(double kd, double vd, int id) {
+        return xaPhuongRepo.kiemTraViTri(kd, vd, id);
     }
 }

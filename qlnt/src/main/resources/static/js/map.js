@@ -11,7 +11,7 @@ $(document).ready(function(){
     myMap.addLayer(layer);
 
     //drawTinhTp(2, myMap);
-    drawXaPhuong(1, myMap);
+    drawXaPhuong(2, myMap);
 });
 
 

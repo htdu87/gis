@@ -1,0 +1,24 @@
+package com.dsc.qlnt.service;
+
+import com.dsc.qlnt.model.KhuTro;
+import com.dsc.qlnt.repository.KhuTroRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class KhuTroServiceImp implements KhuTroService {
+    @Autowired
+    private KhuTroRepository khuTroRepo;
+
+    @Override
+    public KhuTro luu(KhuTro kt) throws Exception {
+        return khuTroRepo.save(kt);
+    }
+
+    @Override
+    public List<KhuTro> layDsKhuTro(String ten, String dc, Integer id) {
+        return khuTroRepo.search(ten, dc, id);
+    }
+}

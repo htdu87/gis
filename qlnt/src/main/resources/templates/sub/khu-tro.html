@@ -1,0 +1,133 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid" id="box-search">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-tinh">
+                                <option value="-1">Tất cả các tỉnh/thành phố</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-huyen">
+                                <option value="-1">Tất cả các quận/huyện</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-xa">
+                                <option value="-1">Tất cả các xã/phường/thị trấn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-chu-tro">
+                                <option value="-1">Tất cả các chủ trọ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txt-q-ten" placeholder="Tên khu trọ">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txt-q-dia-chi" placeholder="Số, tên đường">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-default btn-flat" id="btn-search"><i class="fa fa-search"></i> Tìm kiếm</button>
+                        <button class="btn btn-default btn-flat" id="btn-clear"><i class="fa fa-times"></i> Làm mới</button>
+                        <button class="btn btn-primary btn-flat" id="btn-add" data-toggle="modal" data-target="#mod-khu-tro"><i class="fa fa-plus"></i> Thêm mới</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                <h4 class="box-title">DANH SÁCH KHU TRỌ</h4>
+            </div>
+            <div class="box-body">
+                <div id="lst-item"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal edit khu tro -->
+<div class="modal" role="dialog" id="mod-khu-tro">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="mod-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>THÔNG TIN KHU TRỌ</h4>
+                <form id="frm-khu-tro">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="hidden" name="idKhuTro" id="txt-id">
+                                <select class="form-control select2" id="cmb-tinh"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select class="form-control select2" id="cmb-huyen"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select class="form-control select2" id="cmb-xa" name="xaPhuong.idXaPhuong"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select class="form-control select2" id="cmb-chu-tro" name="chuKhuTro.idChuKhuTro"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="number" name="kinhDo" id="txt-lat" class="form-control" placeholder="Kinh độ">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="number" name="viDo" id="txt-lon" class="form-control" placeholder="Vĩ độ">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="text" name="tenKhuTro" id="txt-ten" class="form-control" placeholder="Tên khu trọ">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <input type="text" name="diaChi" id="txt-dia-chi" class="form-control" placeholder="Địa chỉ">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-flat btn-primary" id="btn-save"><i class="fa fa-check"></i> Lưu thông tin</button>
+                            <button class="btn btn-flat btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
