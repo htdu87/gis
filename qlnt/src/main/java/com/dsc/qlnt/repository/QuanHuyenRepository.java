@@ -13,7 +13,7 @@ public interface QuanHuyenRepository extends CrudRepository<QuanHuyen, Integer> 
     @Query(value = "call LAY_QUAN_HUYEN(-1,?1,?2)", nativeQuery = true)
     Iterable<QuanHuyen> findAll(Integer idTTp, String ten);
 
-    @Query(value = "call LAY_QUAN_HUYEN(-1,?1)", nativeQuery = true)
+    @Query(value = "call LAY_QUAN_HUYEN(-1,?1,\"\")", nativeQuery = true)
     Iterable<QuanHuyen> layTheoTinhTp(Integer idTTp);
 
     @Query(value = "call LUU_QUAN_HUYEN(?1,?2,?3,?4)", nativeQuery = true)

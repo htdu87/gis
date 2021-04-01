@@ -7,7 +7,7 @@ $(document).ready(function() {
             {name:'namSinh',title:'Năm sinh',type:'interval-wt'},
             {name:'nu',title:'Nữ',type:'check',css:{'text-align':'center','width':'50px'}},
             {name:'sdt',title:'Số điện thoại'},
-            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
+            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center','width':'70px'},content:function(obj) {
                 return '<a href="#" class="cmd cmd-edit" data-rid="'+obj.idChuKhuTro+'" title="Chỉnh sửa" data-target="#mod-chu-tro" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idChuKhuTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
             }}
         ],
