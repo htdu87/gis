@@ -28,6 +28,8 @@
     body {
       overflow-y: hidden;
       background-image: url(dist/img/background-learning.jpg) !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
 	}
     .login-logo,.login-logo a {
       color:#fff;
@@ -77,7 +79,7 @@
 	  <!-- /.login-box-body -->
 	</div>
 <!-- /.login-box -->
-<p style="position:fixed;left:0;bottom:0;width:100%;color:#fff;text-align:center;z-index:1"><span th:text="'&copy; 2021 - '+${#dates.year(#dates.createNow())}"></span> <a href="http://giaiphapsocm.com" target="_blank" style="color:#fff">DSCo.,Ltd</a></p>
+<p style="position:fixed;left:0;bottom:0;width:100%;color:#fff;text-align:center;z-index:1;text-shadow:0px 0px 2px #000"><span th:text="'&copy; '+${#dates.year(#dates.createNow())}"></span> &bull; THẢO - DƯ - ĐỨC</p>
 <!-- jQuery 3 -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->

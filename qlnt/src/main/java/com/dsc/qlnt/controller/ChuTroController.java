@@ -59,4 +59,22 @@ public class ChuTroController {
     public Response layDanhSach(String hoTen, String sdt) {
         return new Response(1,chuKhuTroSer.layDsChuKhuTro(hoTen, sdt));
     }
+
+    @RequestMapping("/lay-chu-tro")
+    @ResponseBody
+    public Response layChuTro(Integer id) {
+        return new Response(1,chuKhuTroSer.layChuKhuTroTheoId(id));
+    }
+
+    @RequestMapping("/xoa-chu-tro")
+    @ResponseBody
+    public Response xoaChuTro(Integer id) {
+        try {
+            chuKhuTroSer.xoa(id);
+            return new Response(1,"Xóa thành thông!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-1,"Xóa chủ trọ không thành thông, vui lòng thử lại sau");
+        }
+    }
 }

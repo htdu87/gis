@@ -1,3 +1,12 @@
+function millisec2Date(millisec, format) {
+    if(millisec==null)return null;
+    var date=new Date(millisec);
+    var dd=('0'+date.getDate()).slice(-2);
+    var mm=('0'+(date.getMonth() + 1)).slice(-2);
+    var yyyy=date.getFullYear();
+    return format.replace('dd',dd).replace('mm',mm).replace('yyyy',yyyy);
+}
+
 function showBoxLoading(boxId){
     var div=$('<div/>').addClass('overlay');
     div.append('<i class="fa fa-spinner fa-spin"></i>');

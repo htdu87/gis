@@ -45,7 +45,18 @@ $(document).ready(function() {
     });
 
     $('#btn-save').click(function() {
-        luu();
+        var xa=$('#cmb-xa').val();
+        var chuTro=$('#cmb-chu-tro').val();
+        var kd=$('#txt-lat').val();
+        var vd=$('#txt-lon').val();
+        var ten=$('#txt-ten').val();
+        var dc=$('#txt-dia-chi').val();
+
+        if(xa==null||chuTro==''||kd==''||vd==''||ten==''||dc=='') {
+            alert('Vui lòng nhập đầy đủ thông tin khu trọ')
+        } else {
+            luu();
+        }
     });
 
     $('#btn-search').click(function() {
