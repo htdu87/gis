@@ -24,4 +24,9 @@ public class TinhTpServiceImp implements TinhTpService {
     public TinhTp layTinhTpTheoId(Integer id) {
         return tinhTpRepo.findById(id).orElse(null);
     }
+
+    @Override
+    public void luu(int id, String ten, String polygon) {
+        tinhTpRepo.luu(id, ten, polygon);
+    }
 }
