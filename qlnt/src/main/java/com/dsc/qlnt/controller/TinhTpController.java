@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/dm-tinh-tp")
 public class TinhTpController {
@@ -44,6 +46,28 @@ public class TinhTpController {
     @RequestMapping("/lay-danh-sach")
     @ResponseBody
     public Response layDanhSach(String ten) {
-        return new Response(1,tinhTpSer.layDsTinhTp());
+        List<TinhTp> data=tinhTpSer.layDsTinhTp(ten);
+        for (TinhTp t:data) {
+            t.setPolygon("");
+        }
+        return new Response(1,data);
+    }
+
+    @RequestMapping("/lay-tinh-tp")
+    @ResponseBody
+    public Response layTinhTp(Integer id) {
+        return new Response(1,tinhTpSer.layTinhTpTheoId(id));
+    }
+
+    @RequestMapping("/xoa-tinh-tp")
+    @ResponseBody
+    public Response xoaTinhTp(Integer id) {
+        try {
+            tinhTpSer.xoa(id);
+            return new Response(1,"Xóa thành thông!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-1,"Xóa tỉnh/thành phố không thành thông, vui lòng thử lại sau");
+        }
     }
 }

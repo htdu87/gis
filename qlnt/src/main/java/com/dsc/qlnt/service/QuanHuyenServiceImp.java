@@ -14,9 +14,9 @@ public class QuanHuyenServiceImp implements QuanHuyenService {
     private QuanHuyenRepository quanHuyenRepo;
 
     @Override
-    public List<QuanHuyen> layDsQuanHuyen() {
+    public List<QuanHuyen> layDsQuanHuyen(Integer idTTp, String ten) {
         List<QuanHuyen> target = new ArrayList<>();
-        quanHuyenRepo.findAll().forEach(target::add);
+        quanHuyenRepo.findAll(idTTp, ten).forEach(target::add);
         return target;
     }
 
@@ -30,5 +30,15 @@ public class QuanHuyenServiceImp implements QuanHuyenService {
     @Override
     public QuanHuyen layQuanHuyenTheoId(Integer id) {
         return quanHuyenRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void luu(int id, int idTtp, String ten, String polygon) {
+        quanHuyenRepo.luu(id, idTtp, ten, polygon);
+    }
+
+    @Override
+    public void xoa(Integer id) {
+        quanHuyenRepo.deleteById(id);
     }
 }

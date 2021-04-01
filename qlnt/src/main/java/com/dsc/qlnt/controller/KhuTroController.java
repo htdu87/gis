@@ -46,7 +46,7 @@ public class KhuTroController {
     @RequestMapping("/init")
     @ResponseBody
     public Response init() {
-        List<TinhTp> dsTinhTp=tinhTpSer.layDsTinhTp();
+        List<TinhTp> dsTinhTp=tinhTpSer.layDsTinhTp("");
         List<QuanHuyen> dsQuanHuyen=dsTinhTp.size()>0?quanHuyenSer.layDsQuanHuyen(dsTinhTp.get(0).getIdTinhTp()):new ArrayList<>();
         List<XaPhuong> dsXaPhuong=dsQuanHuyen.size()>0?xaPhuongSer.layDsXaPhuong(dsQuanHuyen.get(0).getIdQuanHuyen()):new ArrayList<>();
         List<ChuKhuTro> dsChuKhuTro=chuKhuTroSer.layDsChuKhuTro("","");

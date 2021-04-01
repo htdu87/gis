@@ -1,11 +1,12 @@
-var prefURL = '/dm-tinh-tp';
+var prefURL='/dm-quan-huyen';
 
 $(document).ready(function() {
     $('#lst-item').jdGrid({
         columns:[
-            {name:'tenTinhTp',title:'Tên tỉnh/thành phố'},
-            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center','width':'100px'},content:function(obj) {
-                return '<a href="#" class="cmd cmd-edit" data-rid="'+obj.idTinhTp+'" title="Chỉnh sửa" data-target="#mod-tinh-tp" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idTinhTp+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
+            {name:'tenQuanHuyen',title:'Tên quận/huyện'},
+            {name:'tenTinhTp',title:'Tỉnh/Thành phố'},
+            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center','width':'70px'},content:function(obj) {
+                return '<a href="#" class="cmd cmd-edit" data-rid="'+obj.idQuanHuyen+'" title="Chỉnh sửa" data-target="#mod-quan-huyen" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idQuanHuyen+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
             }}
         ],
         extclass:'tbl-primary',
@@ -15,45 +16,109 @@ $(document).ready(function() {
         nocss:{'text-align':'center','width':'50px'}
     });
 
-    $('#mod-tinh-tp').on('shown.bs.modal', function (e) {
+    $('#mod-quan-huyen').on('shown.bs.modal', function (e) {
         var button = $(e.relatedTarget);
         var id=button.data('rid');
         if(id != undefined) {
-            layTtTinhTp(id);
+            layTtQuanHuyen(id);
         }
     });
 
-    $('#mod-tinh-tp').on('hidden.bs.modal', function (e) {
+    $('#mod-quan-huyen').on('hidden.bs.modal', function (e) {
         clear();
     });
 
     $('#btn-search').click(function() {
-        layDsTinhTp();
+        layDsQuanHuyen();
     });
 
     $('#btn-clear').click(function() {
+        $('#cmb-q-tinh').val(-1);
         $('#txt-q-ten').val('');
-        layDsTinhTp();
+        layDsQuanHuyen();
     });
 
     $('#btn-save').click(function() {
+        var tinh=$('#cmb-tinh').val();
         var ten=$('#txt-ten').val();
         var pol=$('#txt-polygon').val();
-        if(ten==''||pol=='') {
-            alert('Vui lòng nhập đầy đủ thông tin tỉnh/thành phố')
+
+        if(tinh==null||ten==''||pol=='') {
+            alert('Vui lòng nhập đầy đủ thông tin quận/huyện')
         } else {
             luu();
         }
     });
 
-    layDsTinhTp();
+    init();
+    layDsQuanHuyen();
 });
 
-function layDsTinhTp() {
+function clear() {
+    $('#txt-id').val('');
+    //$('#cmb-tinh').val(res.resData.idTinhTp);
+    $('#txt-ten').val('');
+    $('#txt-polygon').val('');
+}
+
+function init() {
+    $.ajax({
+        url:prefURL+'/init',
+        method:'post',
+        beforeSend:function() {
+            showBoxLoading('box-search');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                var dsTinhTp=res.resData['tinhTp'];
+
+                $.each(dsTinhTp,function(i,obj){
+                    $('#cmb-tinh, #cmb-q-tinh').append($('<option>', {
+                        value: obj.idTinhTp,
+                        text : obj.tenTinhTp
+                    }));
+                });
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('box-search');
+        }
+    });
+}
+
+function luu() {
+    $.ajax({
+        url:prefURL+'/luu',
+        method:'post',
+        dataType:'json',
+        data:new FormData($('#frm-quan-huyen')[0]),
+        processData:false,
+        contentType:false,
+        beforeSend:function() {
+            showBoxLoading('mod-body');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                $('#mod-quan-huyen').modal('hide');
+                layDsQuanHuyen();
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body');
+        }
+    });
+}
+
+function layDsQuanHuyen() {
     $.ajax({
         url:prefURL+'/lay-danh-sach',
         method:'post',
-        data:{ten:$('#txt-q-ten').val()},
+        data:{ten:$('#txt-q-ten').val(),idTTp:$('#cmb-q-tinh').val()},
         beforeSend:function() {
             showBoxLoading('box-search');
         }, success:function(res) {
@@ -76,49 +141,18 @@ function layDsTinhTp() {
     });
 }
 
-function clear() {
-    $('#txt-id').val('');
-    $('#txt-ten').val('');
-    $('#txt-polygon').val('');
-}
-
-function luu() {
+function layTtQuanHuyen(id) {
     $.ajax({
-        url:prefURL+'/luu',
-        method:'post',
-        dataType:'json',
-        data:new FormData($('#frm-tinh-tp')[0]),
-        processData:false,
-        contentType:false,
-        beforeSend:function() {
-            showBoxLoading('mod-body');
-        }, success:function(res) {
-            if(res.resCode>0) {
-                showToastSuc(res.resMsg);
-                $('#mod-tinh-tp').modal('hide');
-                layDsTinhTp();
-            } else {
-                alert(res.resMsg);
-            }
-        }, error:function(jqXHR) {
-            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
-        }, complete:function() {
-            hideBoxLoading('mod-body');
-        }
-    });
-}
-
-function layTtTinhTp(id) {
-    $.ajax({
-        url:prefURL+'/lay-tinh-tp',
+        url:prefURL+'/lay-quan-huyen',
         method:'post',
         data:{id:id},
         beforeSend:function() {
             showBoxLoading('mod-body');
         }, success:function(res) {
             if(res.resCode>0) {
-                $('#txt-id').val(res.resData.idTinhTp);
-                $('#txt-ten').val(res.resData.tenTinhTp);
+                $('#txt-id').val(res.resData.idQuanHuyen);
+                $('#cmb-tinh').val(res.resData.idTinhTp);
+                $('#txt-ten').val(res.resData.tenQuanHuyen);
                 $('#txt-polygon').val(res.resData.polygon);
             } else {
                 alert(res.resMsg);
@@ -133,7 +167,7 @@ function layTtTinhTp(id) {
 
 function xoa(id) {
     $.ajax({
-        url:prefURL+'/xoa-tinh-tp',
+        url:prefURL+'/xoa-quan-huyen',
         method:'post',
         data:{id:id},
         beforeSend:function() {
@@ -141,7 +175,7 @@ function xoa(id) {
         }, success:function(res) {
             if(res.resCode>0) {
                 showToastSuc(res.resMsg);
-                layDsTinhTp();
+                layDsQuanHuyen();
             } else {
                 alert(res.resMsg);
             }

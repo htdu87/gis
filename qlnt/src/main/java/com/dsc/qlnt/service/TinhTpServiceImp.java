@@ -14,9 +14,9 @@ public class TinhTpServiceImp implements TinhTpService {
     private TinhTpRepository tinhTpRepo;
 
     @Override
-    public List<TinhTp> layDsTinhTp() {
+    public List<TinhTp> layDsTinhTp(String ten) {
         List<TinhTp> target = new ArrayList<>();
-        tinhTpRepo.findAll().forEach(target::add);
+        tinhTpRepo.findAll(ten).forEach(target::add);
         return target;
     }
 
@@ -28,5 +28,10 @@ public class TinhTpServiceImp implements TinhTpService {
     @Override
     public void luu(int id, String ten, String polygon) {
         tinhTpRepo.luu(id, ten, polygon);
+    }
+
+    @Override
+    public void xoa(Integer id) {
+        tinhTpRepo.deleteById(id);
     }
 }
