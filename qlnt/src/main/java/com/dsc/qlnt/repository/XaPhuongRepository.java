@@ -7,13 +7,13 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface XaPhuongRepository extends CrudRepository<XaPhuong, Integer> {
-    @Query(value = "call LAY_XA_PHUONG(?1,-1,\"\")", nativeQuery = true)
+    @Query(value = "call LAY_XA_PHUONG(?1,-1,\"\",-1)", nativeQuery = true)
     Optional<XaPhuong> findById(Integer id);
 
-    @Query(value = "call LAY_XA_PHUONG(-1,?1,?2)", nativeQuery = true)
-    Iterable<XaPhuong> findAll(Integer idQH, String ten);
+    @Query(value = "call LAY_XA_PHUONG(-1,?1,?2,?3)", nativeQuery = true)
+    Iterable<XaPhuong> findAll(Integer idQH, String ten, Integer idTTp);
 
-    @Query(value = "call LAY_XA_PHUONG(-1,?1)", nativeQuery = true)
+    @Query(value = "call LAY_XA_PHUONG(-1,?1,\"\",-1)", nativeQuery = true)
     Iterable<XaPhuong> LayDsTheoQuanHuyen(Integer idQuanHuyen);
 
     @Query(value = "select KIEM_TRA_VI_TRI_TRONG_XA(?1,?2,?3)", nativeQuery = true)

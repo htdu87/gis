@@ -153,4 +153,24 @@ public class KhuTro implements java.io.Serializable {
 	public String getTenChuKhuTro() {
 		return chuKhuTro.getHoTen();
 	}
+
+	@Transient
+	public Integer getIdChuTro() {
+		return chuKhuTro.getIdChuKhuTro();
+	}
+
+	@Transient
+	public Integer getIdXaPhuong() {
+		return xaPhuong.getIdXaPhuong();
+	}
+
+	@Transient
+	public Integer getIdQuanHuyen() {
+		return xaPhuong.getIdQuanHuyen();
+	}
+
+	@Transient
+	public Integer getIdTinhTp() {
+		return xaPhuong.getQuanHuyen().getIdTinhTp();
+	}
 }

@@ -110,7 +110,7 @@ function layDsXaPhuong() {
     $.ajax({
         url:prefURL+'/lay-danh-sach',
         method:'post',
-        data:{ten:$('#txt-q-ten').val(),idQuanHuyen:$('#cmb-q-huyen').val()},
+        data:{ten:$('#txt-q-ten').val(),idQuanHuyen:$('#cmb-q-huyen').val(), idTTp:$('#cmb-q-tinh').val()},
         beforeSend:function() {
             showBoxLoading('box-search');
         }, success:function(res) {
@@ -206,7 +206,6 @@ function layTtXaPhuong(id) {
             if(res.resCode>0) {
                 $('#txt-id').val(res.resData.idXaPhuong);
                 $('#cmb-tinh').val(res.resData.idTinhTp);
-                //$('#cmb-huyen').val(res.resData.idQuanHuyen);
                 $('#txt-ten').val(res.resData.tenXaPhuong);
                 $('#txt-polygon').val(res.resData.polygon);
                 $('#cmb-tinh').trigger('change', res.resData.idQuanHuyen);
@@ -221,3 +220,24 @@ function layTtXaPhuong(id) {
     });
 }
 
+function xoa(id) {
+    $.ajax({
+        url:prefURL+'/xoa-xa-phuong',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('box-list');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                layDsXaPhuong();
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('box-list');
+        }
+    });
+}

@@ -14,9 +14,9 @@ public class XaPhuongServiceImp implements XaPhuongService {
     private XaPhuongRepository xaPhuongRepo;
 
     @Override
-    public List<XaPhuong> layDsXaPhuong(Integer idQH, String ten) {
+    public List<XaPhuong> layDsXaPhuong(Integer idQH, String ten, Integer idTTp) {
         List<XaPhuong> target = new ArrayList<>();
-        xaPhuongRepo.findAll(idQH, ten).forEach(target::add);
+        xaPhuongRepo.findAll(idQH, ten,idTTp).forEach(target::add);
         return target;
     }
 
@@ -40,5 +40,10 @@ public class XaPhuongServiceImp implements XaPhuongService {
     @Override
     public void luu(int idXaPhuong, int idQuanHuyen, String ten, String polygon) {
         xaPhuongRepo.luu(idXaPhuong, idQuanHuyen, ten, polygon);
+    }
+
+    @Override
+    public void xoa(Integer id) {
+        xaPhuongRepo.deleteById(id);
     }
 }

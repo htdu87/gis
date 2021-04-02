@@ -106,8 +106,8 @@ public class XaPhuongController {
 
     @RequestMapping("/lay-danh-sach")
     @ResponseBody
-    public Response layDsXaPhuong(Integer idQuanHuyen, String ten) {
-        List<XaPhuong> data=xaPhuongSer.layDsXaPhuong(idQuanHuyen, ten);
+    public Response layDsXaPhuong(Integer idQuanHuyen, String ten, Integer idTTp) {
+        List<XaPhuong> data=xaPhuongSer.layDsXaPhuong(idQuanHuyen, ten, idTTp);
         for (XaPhuong xp:data) {
             xp.setPolygon("");
         }
@@ -133,5 +133,17 @@ public class XaPhuongController {
     @ResponseBody
     public Response layTtXaPhuong(Integer id) {
         return new Response(1,xaPhuongSer.layXaPhuongTheoId(id));
+    }
+
+    @RequestMapping("/xoa-xa-phuong")
+    @ResponseBody
+    public Response xoaXaPhuong(Integer id) {
+        try {
+            xaPhuongSer.xoa(id);
+            return new Response(1,"Xóa thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-1,"Xóa xã/phường không thành công, vui lòng thử lại sau");
+        }
     }
 }

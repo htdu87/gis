@@ -21,4 +21,14 @@ public class KhuTroServiceImp implements KhuTroService {
     public List<KhuTro> layDsKhuTro(String ten, String dc, Integer id) {
         return khuTroRepo.search(ten, dc, id);
     }
+
+    @Override
+    public KhuTro layKhuTroTheoId(Integer id) {
+        return khuTroRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void xoa(Integer id) {
+        khuTroRepo.deleteById(id);
+    }
 }

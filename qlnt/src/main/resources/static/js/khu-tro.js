@@ -12,7 +12,7 @@ $(document).ready(function() {
             {name:'fullAddress',title:'Địa chỉ'},
             {name:'tenChuKhuTro',title:'Tên chủ khu trọ'},
             {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
-                return '<a href="#" class="cmd cmd-edit" data-rid="'+obj.idPhiKhac+'" title="Chỉnh sửa" data-target="#mod-edit" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idPhiKhac+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
+                return '<a href="#" class="cmd cmd-edit" data-rid="'+obj.idKhuTro+'" title="Chỉnh sửa" data-target="#mod-khu-tro" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idKhuTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
             }}
         ],
         extclass:'tbl-primary',
@@ -25,15 +25,26 @@ $(document).ready(function() {
     $('#mod-khu-tro').on('shown.bs.modal', function (e) {
         if(dsTinhTp==null||dsQuanHuyen==null||dsXaPhuong==null||dsChuKhuTro==null) {
             init();
+        } else {
+            var button = $(e.relatedTarget);
+            var id=button.data('rid');
+            if(id != undefined) {
+                layTtKhuTro(id);
+            }
         }
     });
 
-    $('#cmb-tinh').change(function() {
-        layQuanHuyen($(this).val(),'cmb-huyen', 'mod-body');
+    $('#mod-khu-tro').on('hidden.bs.modal', function (e) {
+        clear();
     });
 
-    $('#cmb-huyen').change(function() {
-        layXaPhuong($(this).val(),'cmb-xa', 'mod-body');
+    $('#cmb-tinh').change(function(e, selectVal) {
+        //console.log(selectVal['idXaPhuong']);
+        layQuanHuyen($(this).val(),'cmb-huyen', 'mod-body',selectVal['idQuanHuyen'], selectVal['idXaPhuong']);
+    });
+
+    $('#cmb-huyen').change(function(e, idXaPhuong) {
+        layXaPhuong($(this).val(),'cmb-xa', 'mod-body', idXaPhuong);
     });
 
     $('#cmb-q-tinh').change(function() {
@@ -64,8 +75,15 @@ $(document).ready(function() {
     });
 
     init();
-    layDsKhuTro();
 });
+
+function clear() {
+    $('#txt-id').val('');
+    $('#txt-lat').val('');
+    $('#txt-lon').val('');
+    $('#txt-ten').val('');
+    $('#txt-dia-chi').val('');
+}
 
 function luu() {
     $.ajax({
@@ -81,7 +99,7 @@ function luu() {
             if(res.resCode>0) {
                 showToastSuc(res.resMsg);
                 $('#mod-khu-tro').modal('hide');
-                //clear();
+                layDsKhuTro();
             } else {
                 alert(res.resMsg);
             }
@@ -103,6 +121,12 @@ function layDsKhuTro() {
         }, success:function(res) {
             if(res.resCode>0) {
                 $('#lst-item').data('jdgrid').fillData(res.resData);
+                $('.cmd-del').click(function(e) {
+                    e.preventDefault();
+                    if(confirm('Bạn chắc muốn xóa?')) {
+                        xoa($(this).attr('rid'));
+                    }
+                });
             } else {
                 alert(res.resMsg);
             }
@@ -151,6 +175,8 @@ function init() {
                         text : obj.hoTen
                     }));
                 });
+
+                layDsKhuTro();
             } else {
                 alert(res.resMsg);
             }
@@ -162,7 +188,7 @@ function init() {
     });
 }
 
-function layQuanHuyen(idTinhTp, idCmb, idContain) {
+function layQuanHuyen(idTinhTp, idCmb, idContain, idQuanHuyen, idXaPhuong) {
     $.ajax({
         url:prefURL+'/lay-quan-huyen',
         method:'post',
@@ -183,7 +209,10 @@ function layQuanHuyen(idTinhTp, idCmb, idContain) {
                     }));
                 });
 
-                $('#'+idCmb).change();
+                if(idQuanHuyen!=undefined)
+                    $('#'+idCmb).val(idQuanHuyen);
+
+                $('#'+idCmb).trigger('change',idXaPhuong);
             } else {
                 alert(res.resMsg);
             }
@@ -195,7 +224,7 @@ function layQuanHuyen(idTinhTp, idCmb, idContain) {
     });
 }
 
-function layXaPhuong(idQuanHuyen, idCmb, idContain) {
+function layXaPhuong(idQuanHuyen, idCmb, idContain, idXaPhuong) {
     $.ajax({
         url:prefURL+'/lay-xa-phuong',
         method:'post',
@@ -215,6 +244,10 @@ function layXaPhuong(idQuanHuyen, idCmb, idContain) {
                         text : obj.tenXaPhuong
                     }));
                 });
+
+                if(idXaPhuong!=undefined)
+                    $('#'+idCmb).val(idXaPhuong);
+
             } else {
                 alert(res.resMsg);
             }
@@ -222,6 +255,56 @@ function layXaPhuong(idQuanHuyen, idCmb, idContain) {
             alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
         }, complete:function() {
             hideBoxLoading(idContain);
+        }
+    });
+}
+
+function layTtKhuTro(id) {
+    $.ajax({
+        url:prefURL+'/lay-khu-tro',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                $('#txt-id').val(res.resData.idKhuTro);
+                $('#txt-ten').val(res.resData.tenKhuTro);
+                $('#txt-dia-chi').val(res.resData.diaChi);
+                $('#txt-lat').val(res.resData.kinhDo);
+                $('#txt-lon').val(res.resData.viDo);
+                $('#cmb-chu-tro').val(res.resData.idChuTro);
+                $('#cmb-tinh').val(res.resData.idTinhTp);
+                $('#cmb-tinh').trigger('change', {'idQuanHuyen':res.resData.idQuanHuyen,'idXaPhuong':res.resData.idXaPhuong});
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body');
+        }
+    });
+}
+
+function xoa(id) {
+    $.ajax({
+        url:prefURL+'/xoa-khu-tro',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('box-list');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                layDsKhuTro();
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('box-list');
         }
     });
 }

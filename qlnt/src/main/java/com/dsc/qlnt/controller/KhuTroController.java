@@ -102,4 +102,23 @@ public class KhuTroController {
     public Response layDsKhuTro(String ten, String dc, Integer id) {
         return new Response(1, khuTroSer.layDsKhuTro(ten, dc, id));
     }
+
+    @RequestMapping("/lay-khu-tro")
+    @ResponseBody
+    public Response layTtKhuTro(Integer id) {
+        return new Response(1, khuTroSer.layKhuTroTheoId(id));
+    }
+
+    @RequestMapping("/xoa-khu-tro")
+    @ResponseBody
+    public Response xoaKhuTro(Integer id) {
+        try {
+            khuTroSer.xoa(id);
+            return new Response(1, "Xóa thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-1, "Xóa khu trọ không thành công, vui lòng thử lại sau");
+        }
+
+    }
 }
