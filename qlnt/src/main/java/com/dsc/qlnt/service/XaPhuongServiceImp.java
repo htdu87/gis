@@ -14,9 +14,9 @@ public class XaPhuongServiceImp implements XaPhuongService {
     private XaPhuongRepository xaPhuongRepo;
 
     @Override
-    public List<XaPhuong> layDsXaPhuong() {
+    public List<XaPhuong> layDsXaPhuong(Integer idQH, String ten) {
         List<XaPhuong> target = new ArrayList<>();
-        xaPhuongRepo.findAll().forEach(target::add);
+        xaPhuongRepo.findAll(idQH, ten).forEach(target::add);
         return target;
     }
 
@@ -35,5 +35,10 @@ public class XaPhuongServiceImp implements XaPhuongService {
     @Override
     public boolean kiemTraViTri(double kd, double vd, int id) {
         return xaPhuongRepo.kiemTraViTri(kd, vd, id);
+    }
+
+    @Override
+    public void luu(int idXaPhuong, int idQuanHuyen, String ten, String polygon) {
+        xaPhuongRepo.luu(idXaPhuong, idQuanHuyen, ten, polygon);
     }
 }
