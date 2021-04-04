@@ -9,13 +9,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/ql-khu-tro")
@@ -30,6 +36,17 @@ public class KhuTroController {
     private ChuKhuTroService chuKhuTroSer;
     @Autowired
     private KhuTroService khuTroSer;
+    @Autowired
+    private LoaiPhongService loaiPhongSer;
+    @Autowired
+    private GiaThueService giaThueSer;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(true);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+    }
 
     @RequestMapping("")
     String showView(Model model) {
@@ -120,5 +137,64 @@ public class KhuTroController {
             return new Response(-1, "Xóa khu trọ không thành công, vui lòng thử lại sau");
         }
 
+    }
+
+    @RequestMapping("/luu-loai-phong")
+    @ResponseBody
+    public Response luuLoaiPhong(LoaiPhong lp, GiaThue giaThue) {
+        try {
+            if (lp.getIdLoaiPhong()==null) {
+                LoaiPhong nlp = loaiPhongSer.luu(lp);
+                giaThue.setLoaiPhong(nlp);
+                nlp.getGiaThues().add(giaThue);
+                loaiPhongSer.luu(nlp);
+            } else {
+                if (giaThue.getIdGiaThue()!=null) {
+                    GiaThue gt=giaThueSer.layGiaThueTheoId(giaThue.getIdGiaThue());
+                    gt.setGiaThue(giaThue.getGiaThue());
+                    gt.setNgayApDung(giaThue.getNgayApDung());
+                    giaThueSer.luu(gt);
+                    List<GiaThue> giaThues=giaThueSer.layDsGiaThueTheoIdLoaiPhong(lp.getIdLoaiPhong());
+                    lp.getGiaThues().clear();
+                    lp.getGiaThues().addAll(giaThues);
+                    loaiPhongSer.luu(lp);
+                } else {
+                    List<GiaThue> giaThues=giaThueSer.layDsGiaThueTheoIdLoaiPhong(lp.getIdLoaiPhong());
+                    giaThue.setLoaiPhong(lp);
+                    giaThues.add(giaThue);
+                    lp.getGiaThues().clear();
+                    lp.getGiaThues().addAll(giaThues);
+                    loaiPhongSer.luu(lp);
+                }
+            }
+            return new Response(1, "Lưu loại phòng thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-11, "Lưu loại phòng không thành công, vui lòng thử lại sau");
+        }
+    }
+
+    @RequestMapping("/lay-ds-loai-phong")
+    @ResponseBody
+    public Response layDsLoaiPhong(Integer id) {
+        return new Response(1, loaiPhongSer.layDsLoaiPhongTheoIdKhuTro(id));
+    }
+
+    @RequestMapping("/lay-loai-phong")
+    @ResponseBody
+    public Response layLoaiPhong(Integer id) {
+        return new Response(1, loaiPhongSer.layLoaiPhongTheoId(id));
+    }
+
+    @RequestMapping("/xoa-loai-phong")
+    @ResponseBody
+    public Response xoaLoaiPhong(Integer id) {
+        try {
+            loaiPhongSer.xoa(id);
+            return new Response(1, "Xóa thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(1, "Xóa loại phòng không thành công, vui lòng thử lại sau");
+        }
     }
 }

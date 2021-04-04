@@ -131,3 +131,77 @@
         </div>
     </div>
 </div>
+<!-- Modal edit loai phong -->
+<div class="modal" role="dialog" id="mod-loai-phong">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="mod-body-loai-phong">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>THÔNG TIN LOẠI PHÒNG TRỌ</h4>
+                <form id="frm-loai-phong">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="hidden" name="khuTro.idKhuTro" id="txt-id-khu-tro">
+                                <input type="hidden" name="idLoaiPhong" id="txt-id-loai-phong">
+                                <input type="text" name="tenLoaiPhong" id="txt-ten-loai-phong" class="form-control" placeholder="Tên loại phòng">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="number" class="form-control" name="dienTich" id="txt-dien-tich" placeholder="Diện tích (m2)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="number" class="form-control" name="soNguoiO" id="txt-so-nguoi-o" placeholder="Số người ở">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="hidden" name="idGiaThue" id="txt-id-gia-thue">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="giaThue" id="txt-gia-thue" placeholder="Giá thuê/tháng">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-flat btn-default" title="Giá thuê mới" id="btn-new-price"><i class="fa fa-plus-circle"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="date" class="form-control" name="ngayApDung" id="txt-ngay-ad" title="Ngày áp dụng" placeholder="Ngày áp dụng">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <textarea name="moTa" id="txt-mo-ta" rows="3" class="form-control" placeholder="Mô tả"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="check-box">
+                        <label><input type="checkbox" name="coGac" id="chk-gac" value="1"> Có gác</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center form-group">
+                            <button type="button" class="btn btn-flat btn-primary" id="btn-save-loai-phong"><i class="fa fa-check"></i> Lưu thông tin</button>
+                            <button type="button" class="btn btn-flat btn-default" id="btn-clear-loai-phong"><i class="fa fa-refresh"></i> Xóa</button>
+                            <button class="btn btn-flat btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="lst-loai-phong"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

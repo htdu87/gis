@@ -12,7 +12,7 @@ $(document).ready(function() {
             {name:'fullAddress',title:'Địa chỉ'},
             {name:'tenChuKhuTro',title:'Tên chủ khu trọ'},
             {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
-                return '<a href="#" class="cmd cmd-edit" data-rid="'+obj.idKhuTro+'" title="Chỉnh sửa" data-target="#mod-khu-tro" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idKhuTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
+                return '<a href="#" class="cmd cmd-type" data-rid="'+obj.idKhuTro+'" title="Quản lý loại phòng" data-target="#mod-loai-phong" data-toggle="modal"><i class="fa fa-th-large"></i></a><a href="#" class="cmd cmd-edit" data-rid="'+obj.idKhuTro+'" title="Quản lý phòng trọ" data-target="#mod-phong-tro" data-toggle="modal"><i class="fa fa-home" style="font-size: 16px"></i></a><a href="#" class="cmd cmd-edit" data-rid="'+obj.idKhuTro+'" title="Chỉnh sửa" data-target="#mod-khu-tro" data-toggle="modal"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del" rid="'+obj.idKhuTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
             }}
         ],
         extclass:'tbl-primary',
@@ -20,6 +20,24 @@ $(document).ready(function() {
         shwno:true,
         nolabel:'STT',
         nocss:{'text-align':'center','width':'50px'}
+    });
+
+    $('#lst-loai-phong').jdGrid({
+        columns:[
+            {name:'tenLoaiPhong',title:'Tên Loại phòng'},
+            {name:'dienTich',title:'D.Tích (m<sup>2</sup>)',css:{'text-align':'right'}},
+            {name:'soNguoiO',title:'SN Ở',css:{'text-align':'right'}},
+            {name:'coGac',title:'Gác',type:'check',css:{'text-align':'center','width':'40px'}},
+            {name:'giaThueHienTai',title:'Giá thuê',format:true,css:{'text-align':'right'}},
+            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
+                return '<a href="#" class="cmd cmd-edit-lp" rid="'+obj.idLoaiPhong+'" title="Chỉnh sửa"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del-lp" rid="'+obj.idLoaiPhong+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
+            }}
+        ],
+        extclass:'tbl-primary',
+        height:'400px',
+        shwno:true,
+        nolabel:'TT',
+        nocss:{'text-align':'center','width':'30px'}
     });
 
     $('#mod-khu-tro').on('shown.bs.modal', function (e) {
@@ -38,9 +56,20 @@ $(document).ready(function() {
         clear();
     });
 
+    $('#mod-loai-phong').on('shown.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+        var id=button.data('rid');
+        $('#txt-id-khu-tro').val(id);
+
+        layDsLoaiPhong(id);
+    });
+
+    $('#mod-loai-phong').on('hidden.bs.modal', function (e) {
+        clearLoaiPhong();
+    });
+
     $('#cmb-tinh').change(function(e, selectVal) {
-        //console.log(selectVal['idXaPhuong']);
-        layQuanHuyen($(this).val(),'cmb-huyen', 'mod-body',selectVal['idQuanHuyen'], selectVal['idXaPhuong']);
+        layQuanHuyen($(this).val(),'cmb-huyen', 'mod-body',selectVal==undefined?undefined:selectVal['idQuanHuyen'], selectVal==undefined?undefined:selectVal['idXaPhuong']);
     });
 
     $('#cmb-huyen').change(function(e, idXaPhuong) {
@@ -72,6 +101,30 @@ $(document).ready(function() {
 
     $('#btn-search').click(function() {
         layDsKhuTro();
+    });
+
+    $('#btn-save-loai-phong').click(function() {
+        var ten=$('#txt-ten-loai-phong').val();
+        var dt=$('#txt-dien-tich').val();
+        var sgo=$('#txt-so-nguoi-o').val();
+        var gt=$('#txt-gia-thue').val();
+        var nad=$('#txt-ngay-ad').val();
+
+        if(ten==''||dt==''||sgo==''||gt==''||nad=='') {
+            alert('Vui lòng nhập đầy đủ thông tin loại phòng trọ')
+        } else {
+            luuLoaiPhong();
+        }
+    });
+
+    $('#btn-clear-loai-phong').click(function() {
+        clearLoaiPhong();
+    });
+
+    $('#btn-new-price').click(function() {
+        $('#txt-id-gia-thue').val('');
+        $('#txt-gia-thue').val('');
+        $('#txt-ngay-ad').val('');
     });
 
     init();
@@ -307,4 +360,102 @@ function xoa(id) {
             hideBoxLoading('box-list');
         }
     });
+}
+
+function luuLoaiPhong() {
+    $.ajax({
+        url:prefURL+'/luu-loai-phong',
+        method:'post',
+        dataType:'json',
+        data:new FormData($('#frm-loai-phong')[0]),
+        processData:false,
+        contentType:false,
+        beforeSend:function() {
+            showBoxLoading('mod-body-loai-phong');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                layDsLoaiPhong($('#txt-id-khu-tro').val());
+                clearLoaiPhong();
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-loai-phong');
+        }
+    });
+}
+
+function layDsLoaiPhong(id) {
+    $.ajax({
+        url:prefURL+'/lay-ds-loai-phong',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body-loai-phong');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                $('#lst-loai-phong').data('jdgrid').fillData(res.resData);
+                $('.cmd-edit-lp').click(function(e) {
+                     e.preventDefault();
+                     layTtLoaiPhong($(this).attr('rid'));
+                });
+                $('.cmd-del-lp').click(function(e) {
+                    e.preventDefault();
+                    if(confirm('Bạn chắc muốn xóa?')) {
+                        xoa($(this).attr('rid'));
+                    }
+                });
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-loai-phong');
+        }
+    });
+}
+
+function layTtLoaiPhong(id) {
+    $.ajax({
+        url:prefURL+'/lay-loai-phong',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body-loai-phong');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                $('#txt-id-loai-phong').val(res.resData.idLoaiPhong);
+                $('#txt-ten-loai-phong').val(res.resData.tenLoaiPhong);
+                $('#txt-dien-tich').val(res.resData.dienTich);
+                $('#txt-so-nguoi-o').val(res.resData.soNguoiO);
+                $('#txt-id-gia-thue').val(res.resData.idGiaThueHienTai);
+                $('#txt-gia-thue').val(res.resData.giaThueHienTai);
+                $('#txt-ngay-ad').val(millisec2Date(res.resData.ngayApDungGiaThueHienTai,'yyyy-mm-dd'));
+                $('#txt-mo-ta').val(res.resData.moTa);
+                $('#chk-gac').prop('checked',res.resData.coGac);
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-loai-phong');
+        }
+    });
+}
+
+function clearLoaiPhong() {
+    $('#txt-id-loai-phong').val('');
+    $('#txt-ten-loai-phong').val('');
+    $('#txt-dien-tich').val('');
+    $('#txt-so-nguoi-o').val('');
+    $('#txt-id-gia-thue').val('');
+    $('#txt-gia-thue').val('');
+    $('#txt-ngay-ad').val('');
+    $('#txt-mo-ta').val('');
+    $('#chk-gac').prop('checked',false);
 }
