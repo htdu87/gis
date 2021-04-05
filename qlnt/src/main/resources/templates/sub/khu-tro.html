@@ -205,3 +205,48 @@
         </div>
     </div>
 </div>
+<!-- Modal edit phong tro -->
+<div class="modal" role="dialog" id="mod-phong-tro">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="mod-body-phong-tro">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>THÔNG TIN PHÒNG TRỌ</h4>
+                <form id="frm-phong-tro">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select class="form-control select2" name="" id="cmb-loai-phong"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select class="form-control select2" name="" id="cmb-tinh-trang"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="hidden" id="txt-id-khu-tro-pt">
+                                <input type="text" name="tenLoaiPhong" id="txt-stt-phong" class="form-control" placeholder="Số thứ tự phòng">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center form-group">
+                            <button type="button" class="btn btn-flat btn-primary" id="btn-save-phong-tro"><i class="fa fa-check"></i> Lưu thông tin</button>
+                            <button type="button" class="btn btn-flat btn-default" id="btn-clear-phong-tro"><i class="fa fa-refresh"></i> Xóa</button>
+                            <button class="btn btn-flat btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="lst-phong-tro"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
