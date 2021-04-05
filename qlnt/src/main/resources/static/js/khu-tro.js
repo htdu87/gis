@@ -42,9 +42,9 @@ $(document).ready(function() {
 
     $('#lst-phong-tro').jdGrid({
             columns:[
-                {name:'tenLoaiPhong',title:'Số thứ tự phòng'},
-                {name:'dienTich',title:'Loại phòng'},
-                {name:'soNguoiO',title:'Tình trạng'},
+                {name:'sttPhong',title:'Số thứ tự phòng'},
+                {name:'tenLoaiPhong',title:'Loại phòng'},
+                {name:'tenTinhTrang',title:'Tình trạng'},
                 {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
                     return '<a href="#" class="cmd cmd-edit-pt" rid="'+obj.idPhongTro+'" title="Chỉnh sửa"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del-pt" rid="'+obj.idPhongTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
                 }}
@@ -82,6 +82,15 @@ $(document).ready(function() {
 
     $('#mod-loai-phong').on('hidden.bs.modal', function (e) {
         clearLoaiPhong();
+    });
+
+    $('#mod-phong-tro').on('shown.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+        var id=button.data('rid');
+        $('#txt-id-khu-tro-pt').val(id);
+
+        initPhongTro(id);
+        layDsPhongTro(id);
     });
 
     $('#cmb-tinh').change(function(e, selectVal) {
@@ -141,6 +150,22 @@ $(document).ready(function() {
         $('#txt-id-gia-thue').val('');
         $('#txt-gia-thue').val('');
         $('#txt-ngay-ad').val('');
+    });
+
+    $('#btn-save-phong-tro').click(function() {
+        var loai=$('#cmb-loai-phong').val();
+        var tt=$('#cmb-tinh-trang').val();
+        var stt=$('#txt-stt-phong').val();
+
+        if(loai==null || tt==null || stt=='') {
+            alert('Vui lòng nhập đầy đủ thông tin phòng trọ');
+        } else {
+            luuPhongTro();
+        }
+    });
+
+    $('#btn-clear-phong-tro').click(function() {
+        clearPhongTro();
     });
 
     init();
@@ -421,7 +446,7 @@ function layDsLoaiPhong(id) {
                 $('.cmd-del-lp').click(function(e) {
                     e.preventDefault();
                     if(confirm('Bạn chắc muốn xóa?')) {
-                        xoa($(this).attr('rid'));
+                        xoaLoaiPhong($(this).attr('rid'));
                     }
                 });
             } else {
@@ -474,4 +499,169 @@ function clearLoaiPhong() {
     $('#txt-ngay-ad').val('');
     $('#txt-mo-ta').val('');
     $('#chk-gac').prop('checked',false);
+}
+
+function xoaLoaiPhong(id) {
+    $.ajax({
+        url:prefURL+'/xoa-loai-phong',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body-loai-phong');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                layDsLoaiPhong($('#txt-id-khu-tro').val());
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-loai-phong');
+        }
+    });
+}
+
+function initPhongTro(idKhuTro) {
+    $.ajax({
+        url:prefURL+'/init-phong-tro',
+        method:'post',
+        data:{idKhuTro:idKhuTro},
+        beforeSend:function() {
+            //showBoxLoading('mod-body-phong-tro');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                var dsLoaiPhong=res.resData['loaiPhong'];
+                var dsTinhTrang=res.resData['tinhTrang'];
+
+                $.each(dsLoaiPhong,function(i,obj){
+                    $('#cmb-loai-phong').append($('<option>', {
+                        value: obj.idLoaiPhong,
+                        text : obj.tenLoaiPhong
+                    }));
+                });
+                $.each(dsTinhTrang,function(i,obj){
+                    $('#cmb-tinh-trang').append($('<option>', {
+                        value: obj.idTinhTrang,
+                        text : obj.tenTinhTrang
+                    }));
+                });
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            //hideBoxLoading('mod-body-phong-tro');
+        }
+    });
+}
+
+function layDsPhongTro(id) {
+    $.ajax({
+        url:prefURL+'/lay-ds-phong-tro',
+        method:'post',
+        data:{idKhuTro:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body-phong-tro');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                $('#lst-phong-tro').data('jdgrid').fillData(res.resData);
+                $('.cmd-edit-pt').click(function(e) {
+                     e.preventDefault();
+                     layTtPhongTro($(this).attr('rid'));
+                });
+                $('.cmd-del-pt').click(function(e) {
+                    e.preventDefault();
+                    if(confirm('Bạn chắc muốn xóa?')) {
+                        xoaPhongTro($(this).attr('rid'));
+                    }
+                });
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-phong-tro');
+        }
+    });
+}
+
+function luuPhongTro() {
+    $.ajax({
+        url:prefURL+'/luu-phong-tro',
+        method:'post',
+        dataType:'json',
+        data:new FormData($('#frm-phong-tro')[0]),
+        processData:false,
+        contentType:false,
+        beforeSend:function() {
+            showBoxLoading('mod-body-phong-tro');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                clearPhongTro();
+                layDsPhongTro($('#txt-id-khu-tro-pt').val());
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-phong-tro');
+        }
+    });
+}
+
+function clearPhongTro() {
+    $('#txt-stt-phong').val('');
+    $('#txt-id-phong-tro').val('');
+}
+
+function layTtPhongTro(id) {
+    $.ajax({
+        url:prefURL+'/lay-phong-tro',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body-phong-tro');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                $('#cmb-loai-phong').val(res.resData.idLoaiPhong);
+                $('#cmb-tinh-trang').val(res.resData.idTinhTrang);
+                $('#txt-id-phong-tro').val(res.resData.idPhongTro);
+                $('#txt-stt-phong').val(res.resData.sttPhong);
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-phong-tro');
+        }
+    });
+}
+
+function xoaPhongTro(id) {
+    $.ajax({
+        url:prefURL+'/xoa-phong-tro',
+        method:'post',
+        data:{id:id},
+        beforeSend:function() {
+            showBoxLoading('mod-body-phong-tro');
+        }, success:function(res) {
+            if(res.resCode>0) {
+                showToastSuc(res.resMsg);
+                layDsPhongTro($('#txt-id-khu-tro-pt').val());
+            } else {
+                alert(res.resMsg);
+            }
+        }, error:function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete:function() {
+            hideBoxLoading('mod-body-phong-tro');
+        }
+    });
 }

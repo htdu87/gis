@@ -4,6 +4,7 @@ import com.dsc.qlnt.ModelAttr;
 import com.dsc.qlnt.Response;
 import com.dsc.qlnt.Utility;
 import com.dsc.qlnt.model.*;
+import com.dsc.qlnt.repository.PhongTroService;
 import com.dsc.qlnt.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -40,6 +41,10 @@ public class KhuTroController {
     private LoaiPhongService loaiPhongSer;
     @Autowired
     private GiaThueService giaThueSer;
+    @Autowired
+    private TinhTrangService tinhTrangSer;
+    @Autowired
+    private PhongTroService phongTroSer;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -194,7 +199,61 @@ public class KhuTroController {
             return new Response(1, "Xóa thành công!");
         } catch (Exception e) {
             e.printStackTrace();
-            return new Response(1, "Xóa loại phòng không thành công, vui lòng thử lại sau");
+            return new Response(-1, "Xóa loại phòng không thành công, vui lòng thử lại sau");
+        }
+    }
+
+    @RequestMapping("/init-phong-tro")
+    @ResponseBody
+    public Response initPhongTro(Integer idKhuTro) {
+        List<LoaiPhong> dsLoaiPhong=loaiPhongSer.layDsLoaiPhongTheoIdKhuTro(idKhuTro);
+        List<TinhTrang> dsTinhTrang=tinhTrangSer.layDsTinhTrang();
+
+        ObjectMapper mapper=new ObjectMapper();
+        ObjectNode resData=mapper.createObjectNode();
+
+        ArrayNode nodeLoaiPhong=mapper.valueToTree(dsLoaiPhong);
+        resData.putArray("loaiPhong").addAll(nodeLoaiPhong);
+
+        ArrayNode nodeTinhTrang=mapper.valueToTree(dsTinhTrang);
+        resData.putArray("tinhTrang").addAll(nodeTinhTrang);
+
+        return new Response(1, resData);
+    }
+
+    @RequestMapping("/luu-phong-tro")
+    @ResponseBody
+    public Response luuTtPhongTro(PhongTro pt) {
+        try {
+            phongTroSer.luu(pt);
+            return new Response(1, "Lưu thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-1, "Lưu phòng trọ không thành công, vui lòng thử lại sau");
+        }
+    }
+
+    @RequestMapping("/lay-ds-phong-tro")
+    @ResponseBody
+    public Response layDsPhongTro(Integer idKhuTro) {
+        return new Response(1, phongTroSer.layDsPhongTroTheoIdKhuTro(idKhuTro));
+    }
+
+    @RequestMapping("/lay-phong-tro")
+    @ResponseBody
+    public Response layTtPhongTro(Integer id) {
+        return new Response(1, phongTroSer.layPhongTroTheoId(id));
+    }
+
+    @RequestMapping("/xoa-phong-tro")
+    @ResponseBody
+    public Response xoaPhongTro(Integer id) {
+        try {
+            phongTroSer.xoa(id);
+            return new Response(1, "Xóa thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(-1, "Xóa phòng trọ không thành công, vui lòng thử lại sau");
         }
     }
 }
