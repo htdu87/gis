@@ -1,0 +1,129 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid" id="box-search">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-tinh">
+                                <option value="-1">Tất cả các tỉnh/thành phố</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-huyen">
+                                <option value="-1">Tất cả các quận/huyện</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control select2" id="cmb-q-xa">
+                                <option value="-1">Tất cả các xã/phường/thị trấn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">                    
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txt-q-ten" placeholder="Tên trường Đại học/Cao đẳng">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txt-q-dia-chi" placeholder="Địa chỉ">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-default btn-flat" id="btn-search"><i class="fa fa-search"></i> Tìm kiếm</button>
+                        <button class="btn btn-default btn-flat" id="btn-clear"><i class="fa fa-times"></i>Làm mới</button>
+                        <button class="btn btn-primary btn-flat" id="btn-add" data-toggle="modal" data-target="#mod-truong"><i class="fa fa-plus"></i>Thêm mới</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                <h4 class="box-title">DANH SÁCH TRƯỜNG ĐẠI HỌC VÀ CAO ĐẲNG</h4>
+            </div>
+            <div class="box-body">
+                <div id="lst-item"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal edit truong dai hoc cao dang -->
+<div class="modal" role="dialog" id="mod-truong">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="mod-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Thông tin trường Đại học và Cao đẳng</h4>
+                <form id="frm-truong">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="hidden" name="idTruong" id="txt-id">
+                                <select class="form-control select2" id="cmb-q-tinh"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select class="form-control select2" id="cmb-q-huyen"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select class="form-control select2" id="cmb-q-xa" name="xaPhuong.idXaPhuong"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="text" name="tenTruong" id="txt-ten" class="form-control" placeholder="Tên trường Đại học/Cao đẳng">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <input type="text" name="diaChi" id="txt-dia-chi" class="form-control" placeholder="Địa chỉ">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="number" name="kinhDo" id="txt-lat" class="form-control" placeholder="Kinh độ">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="number" name="viDo" id="txt-lon" class="form-control" placeholder="Vĩ độ">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="text" name="icon" id="txt-icon" class="form-control" placeholder="Icon", value = "/resources/static/bower_components/leaflet/icon/university.png">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-flat btn-primary" id="btn-save"><i class="fa fa-check"></i>Lưu thông tin</button>
+                            <button class="btn btn-flat btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Đóng</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
