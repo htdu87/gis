@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid" id="box-search">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txt-q-hoten" placeholder="Họ tên chủ trọ">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txt-q-sdt" placeholder="Số điện thoại">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-default btn-flat" id="btn-search"><i class="fa fa-search"></i> Tìm kiếm</button>
+                        <button class="btn btn-default btn-flat" id="btn-clear"><i class="fa fa-times"></i> Làm mới</button>
+                        <button class="btn btn-primary btn-flat" id="btn-add" data-toggle="modal" data-target="#mod-chu-tro"><i class="fa fa-plus"></i> Thêm mới</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid" id="box-list">
+            <div class="box-header">
+                <h4 class="box-title">DANH SÁCH CHỦ TRỌ</h4>
+            </div>
+            <div class="box-body">
+                <div id="lst-item"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal edit chu tro -->
+<div class="modal" role="dialog" id="mod-chu-tro">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="mod-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>THÔNG TIN CHỦ TRỌ</h4>
+                <form id="frm-chu-tro">
+                    <div class="form-group">
+                        <input type="hidden" name="idChuKhuTro" id="txt-id">
+                        <input type="text" name="hoTen" id="txt-hoten" class="form-control" placeholder="Họ tên chủ trọ">
+                    </div>
+                    <div class="form-group">
+                        <input type="date" name="namSinh" id="txt-namsinh" class="form-control" placeholder="Năm sinh">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="sdt" id="txt-sdt" class="form-control" placeholder="Số điện thoại">
+                    </div>
+                    <div class="check-box">
+                        <label><input type="checkbox" name="nu" id="chk-nu" value="1"> Nữ</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-flat btn-primary" id="btn-save"><i class="fa fa-check"></i> Lưu thông tin</button>
+                            <button class="btn btn-flat btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
