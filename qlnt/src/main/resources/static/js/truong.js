@@ -27,8 +27,8 @@ $(document).ready(function() {
         }
     });
 
-    $('#cmb-tinh').change(function() {
-        layQuanHuyen($(this).val(),'cmb-huyen', 'mod-body');
+    $('#cmb-tinh').change(function(e, selectVal) {
+        layQuanHuyen($(this).val(),'cmb-huyen', 'mod-body',selectVal==undefined?undefined:selectVal['idQuanHuyen'], selectVal==undefined?undefined:selectVal['idXaPhuong']);
     });
 
     $('#cmb-huyen').change(function() {
@@ -50,9 +50,13 @@ $(document).ready(function() {
     $('#btn-search').click(function() {
         layDsKhuTro();
     });
+    
+    $('#i_file').change( function(event) {    	
+    	$('#txt-icon').val(URL.createObjectURL(event.target.files[0]));    	
+	});
 
-    init();
-    layDanhSachTruong();
+   	init();
+    //layDanhSachTruong();
 });
 
 function luu() {

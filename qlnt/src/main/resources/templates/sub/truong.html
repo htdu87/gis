@@ -6,7 +6,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <select class="form-control select2" id="cmb-q-tinh">
-                                <option value="-1">Tất cả các tỉnh/thành phố</option>
+                                <option value="-1">Tất cả các tỉnh/Thành phố</option>
                             </select>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
     <div class="col-md-12">
         <div class="box box-solid">
             <div class="box-header">
-                <h4 class="box-title">DANH SÁCH TRƯỜNG ĐẠI HỌC VÀ CAO ĐẲNG</h4>
+                <h4 class="box-title">DANH SÁCH CÁC TRƯỜNG ĐẠI HỌC VÀ CAO ĐẲNG</h4>
             </div>
             <div class="box-body">
                 <div id="lst-item"></div>
@@ -89,33 +89,40 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <input type="text" name="tenTruong" id="txt-ten" class="form-control" placeholder="Tên trường Đại học/Cao đẳng">
+                                <input type="text" name="tenTruong" id="txt-ten" class="form-control" placeholder="TÃªn trÆ°á»�ng Ä�áº¡i há»�c/Cao Ä‘áº³ng">
                             </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
-                                <input type="text" name="diaChi" id="txt-dia-chi" class="form-control" placeholder="Địa chỉ">
+                                <input type="text" name="diaChi" id="txt-dia-chi" class="form-control" placeholder="Ä�á»‹a chá»‰">
                             </div>
                         </div>
                     </div>
                     <div class="row">                        
                         <div class="col-md-4">
                             <div class="form-group">
-                                <input type="number" name="kinhDo" id="txt-lat" class="form-control" placeholder="Kinh độ">
+                                <input type="number" name="kinhDo" id="txt-lat" class="form-control" placeholder="Kinh Ä‘á»™">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <input type="number" name="viDo" id="txt-lon" class="form-control" placeholder="Vĩ độ">
+                                <input type="number" name="viDo" id="txt-lon" class="form-control" placeholder="VÄ© Ä‘á»™">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <input type="text" name="icon" id="txt-icon" class="form-control" placeholder="Icon", value = "/resources/static/bower_components/leaflet/icon/university.png">
-                            </div>
-                        </div>
+                       
                     </div>
-                    
+                    <div class="row">
+                    	<div class="col-md-4">
+                    		<div class="form-group">
+                           		<input type="file" id="i_file" value=""> 
+                            </div>                               
+                    	</div>                    	
+                    	<div class="col-md-8">
+                    		<div class = "form-group">
+                    			<input type="text" name="icon" id="txt-icon" class="form-control" placeholder="Icon">
+                    		</div>
+                    	</div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <button type="button" class="btn btn-flat btn-primary" id="btn-save"><i class="fa fa-check"></i>Lưu thông tin</button>
