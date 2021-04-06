@@ -173,4 +173,9 @@ public class KhuTro implements java.io.Serializable {
 	public Integer getIdTinhTp() {
 		return xaPhuong.getQuanHuyen().getIdTinhTp();
 	}
+
+	@Transient
+	public String getSdtChuTro() {
+		return chuKhuTro.getSdt();
+	}
 }

@@ -128,6 +128,16 @@ $(document).ready(function() {
         layDsKhuTro();
     });
 
+    $('#btn-clear').click(function() {
+        $('#txt-q-ten').val('');
+        $('#txt-q-dia-chi').val('');
+        $('#cmb-q-xa').val(-1);
+        $('#cmb-q-huyen').val(-1);
+        $('#cmb-q-tinh').val(-1);
+        $('#cmb-q-chu-tro').val(-1);
+        layDsKhuTro();
+    });
+
     $('#btn-save-loai-phong').click(function() {
         var ten=$('#txt-ten-loai-phong').val();
         var dt=$('#txt-dien-tich').val();
