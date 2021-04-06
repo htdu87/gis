@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface KhuTroService {
     KhuTro luu(KhuTro kt) throws Exception;
-    List<KhuTro> layDsKhuTro(String ten, String dc, Integer id);
+    List<KhuTro> layDsKhuTro(String ten, String dc, Integer idXaPhuong, Integer idQuanHuyen, Integer idTTp, Integer idChuTro);
     KhuTro layKhuTroTheoId(Integer id);
     void xoa(Integer id) throws Exception;
 }

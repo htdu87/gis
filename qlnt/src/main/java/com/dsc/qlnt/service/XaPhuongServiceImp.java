@@ -33,8 +33,8 @@ public class XaPhuongServiceImp implements XaPhuongService {
     }
 
     @Override
-    public boolean kiemTraViTri(double kd, double vd, int id) {
-        return xaPhuongRepo.kiemTraViTri(kd, vd, id);
+    public boolean kiemTraViTri(double vd,double kd, int id) {
+        return xaPhuongRepo.kiemTraViTri(vd, kd, id);
     }
 
     @Override

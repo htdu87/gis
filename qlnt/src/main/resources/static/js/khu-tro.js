@@ -209,7 +209,7 @@ function layDsKhuTro() {
     $.ajax({
         url:prefURL+'/lay-danh-sach',
         method:'post',
-        data:{ten:$('#txt-q-ten').val(),dc:$('#txt-q-dia-chi').val(),id:$('#cmb-q-xa').val()},
+        data:{ten:$('#txt-q-ten').val(),dc:$('#txt-q-dia-chi').val(),idXaPhuong:$('#cmb-q-xa').val(),idQuanHuyen:$('#cmb-q-huyen').val(), idTTp:$('#cmb-q-tinh').val(),idChuTro:$('#cmb-q-chu-tro').val()},
         beforeSend:function() {
             showBoxLoading('box-search');
         }, success:function(res) {

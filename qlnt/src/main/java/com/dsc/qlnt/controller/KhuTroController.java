@@ -73,6 +73,16 @@ public class KhuTroController {
         List<XaPhuong> dsXaPhuong=dsQuanHuyen.size()>0?xaPhuongSer.layDsXaPhuong(dsQuanHuyen.get(0).getIdQuanHuyen()):new ArrayList<>();
         List<ChuKhuTro> dsChuKhuTro=chuKhuTroSer.layDsChuKhuTro("","");
 
+        for (TinhTp ttp:dsTinhTp) {
+            ttp.setPolygon("");
+        }
+        for (QuanHuyen qh:dsQuanHuyen) {
+            qh.setPolygon("");
+        }
+        for (XaPhuong xp:dsXaPhuong) {
+            xp.setPolygon("");
+        }
+
         ObjectMapper mapper=new ObjectMapper();
         ObjectNode resData=mapper.createObjectNode();
 
@@ -106,7 +116,7 @@ public class KhuTroController {
     @RequestMapping("/luu")
     @ResponseBody
     public Response luuThongTin(KhuTro kt) {
-        if (xaPhuongSer.kiemTraViTri(kt.getKinhDo(),kt.getViDo(),kt.getXaPhuong().getIdXaPhuong())) {
+        if (xaPhuongSer.kiemTraViTri(kt.getViDo(),kt.getKinhDo(),kt.getXaPhuong().getIdXaPhuong())) {
             try {
                 khuTroSer.luu(kt);
                 return new Response(1,"Lưu thông tin thành công!");
@@ -121,8 +131,8 @@ public class KhuTroController {
 
     @RequestMapping("/lay-danh-sach")
     @ResponseBody
-    public Response layDsKhuTro(String ten, String dc, Integer id) {
-        return new Response(1, khuTroSer.layDsKhuTro(ten, dc, id));
+    public Response layDsKhuTro(String ten, String dc, Integer idXaPhuong, Integer idQuanHuyen, Integer idTTp, Integer idChuTro) {
+        return new Response(1, khuTroSer.layDsKhuTro(ten, dc, idXaPhuong, idQuanHuyen, idTTp, idChuTro));
     }
 
     @RequestMapping("/lay-khu-tro")

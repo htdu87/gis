@@ -17,7 +17,7 @@ public interface XaPhuongRepository extends CrudRepository<XaPhuong, Integer> {
     Iterable<XaPhuong> LayDsTheoQuanHuyen(Integer idQuanHuyen);
 
     @Query(value = "select KIEM_TRA_VI_TRI_TRONG_XA(?1,?2,?3)", nativeQuery = true)
-    boolean kiemTraViTri(double kd, double vd, int id);
+    boolean kiemTraViTri(double vd, double kd, int id);
 
     @Query(value = "call LUU_XA_PHUONG(?1,?2,?3,?4)", nativeQuery = true)
     void luu(int idXaPhuong, int idQuanHuyen, String ten, String polygon);

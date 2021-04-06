@@ -18,8 +18,8 @@ public class KhuTroServiceImp implements KhuTroService {
     }
 
     @Override
-    public List<KhuTro> layDsKhuTro(String ten, String dc, Integer id) {
-        return khuTroRepo.search(ten, dc, id);
+    public List<KhuTro> layDsKhuTro(String ten, String dc, Integer idXaPhuong, Integer idQuanHuyen, Integer idTTp, Integer idChuTro) {
+        return khuTroRepo.search(ten, dc, idXaPhuong, idQuanHuyen, idTTp, idChuTro);
     }
 
     @Override
