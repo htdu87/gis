@@ -74,7 +74,7 @@ function drawKhuTro(map) {
             var size=res.resData.length;
             for(var i=0;i<size;i++) {
                 var kt=res.resData[i];
-                var popup = L.popup().setContent('<h4>'+kt.tenKhuTro+'</h4><ul class="marker-ul"><li><i class="fa fa-map-signs"></i> '+kt.fullAddress+'</li><li><i class="fa fa-phone"></i> <b>'+kt.sdtChuTro+'</b></li></ul><a href="#">Xem chi tiết</a>');
+                var popup = L.popup().setContent('<h4>'+kt.tenKhuTro+'</h4><ul class="marker-ul"><li><i class="fa fa-map-signs"></i> '+kt.fullAddress+'</li><li><i class="fa fa-phone"></i> <b>'+kt.sdtChuTro+'</b></li></ul><a href="#" data-rid="'+kt.idKhuTro+'" data-target="#mod-tt-khu-tro" data-toggle="modal">Xem chi tiết</a>');
                 var marker = new L.marker(new L.latLng(kt.viDo, kt.kinhDo),{title:kt.tenKhuTro, alt:kt.tenKhuTro, icon:homeMarkerIcon});
                 marker.bindPopup(popup).openPopup();
                 marker.addTo(map);

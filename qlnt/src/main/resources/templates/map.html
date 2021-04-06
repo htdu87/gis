@@ -75,11 +75,39 @@
     .marker-ul li {
       margin-top:5px;
     }
+
+    .tab-title {
+      font-size:18px;
+    }
   </style>
 </head>
 <body class="hold-transition login-page">
   <div id="map-container"></div>
-<p class="copy"><span th:text="'&copy; '+${#dates.year(#dates.createNow())}"></span> &bull; THẢO - DƯ - ĐỨC</p>
+  <p class="copy"><span th:text="'&copy; '+${#dates.year(#dates.createNow())}"></span> &bull; THẢO - DƯ - ĐỨC</p>
+
+  <!-- Modal thong tin tro -->
+  <div class="modal" role="dialog" id="mod-tt-khu-tro">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-body" id="mod-body">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4>THÔNG TIN NHÀ TRỌ</h4>
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#thong-tin" aria-controls="thong-tin" role="tab" data-toggle="tab" class="tab-title">Thông tin chung</a></li>
+              <li role="presentation"><a href="#phong-tro" aria-controls="phong-tro" role="tab" data-toggle="tab" class="tab-title">Danh sách phòng trọ</a></li>
+              <li role="presentation"><a href="#loai-phong" aria-controls="phong-tro" role="tab" data-toggle="tab" class="tab-title">Các loại phòng trọ</a></li>
+            </ul>
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="thong-tin">Tab 1</div>
+              <div role="tabpanel" class="tab-pane" id="phong-tro">Tab 2</div>
+              <div role="tabpanel" class="tab-pane" id="loai-phong">Tab 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- jQuery 3 -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
