@@ -14,9 +14,12 @@
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <!-- Style -->
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Leaflet style -->
   <link rel="stylesheet" href="bower_components/leaflet/leaflet.css">
-	
+  <!-- jdGrid style -->
+  <link rel="stylesheet" href="bower_components/jdgrid/css/jdgrid.css"/>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -79,6 +82,9 @@
     .tab-title {
       font-size:18px;
     }
+    .form-group {
+      margin-bottom: 0px;
+    }
   </style>
 </head>
 <body class="hold-transition login-page">
@@ -99,9 +105,52 @@
               <li role="presentation"><a href="#loai-phong" aria-controls="phong-tro" role="tab" data-toggle="tab" class="tab-title">Các loại phòng trọ</a></li>
             </ul>
             <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="thong-tin">Tab 1</div>
-              <div role="tabpanel" class="tab-pane" id="phong-tro">Tab 2</div>
-              <div role="tabpanel" class="tab-pane" id="loai-phong">Tab 3</div>
+              <div role="tabpanel" class="tab-pane form-horizontal active" id="thong-tin">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Tên nhà trọ</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-ten"></span></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Số phòng còn trống</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-trong" class="text-primary" style="font-weight:bold"></span></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Địa chỉ</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-dc"></span></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">SĐT Liên hệ</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-sdt"></span></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Tên chủ trọ</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-ten-chu"></span></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Giới tính</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-nu"></span></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Năm sinh</label>
+                  <div class="col-sm-7">
+                    <p class="form-control-static"><span id="spn-ns"></span></p>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="phong-tro"><div id="lst-phong-tro"></div></div>
+              <div role="tabpanel" class="tab-pane" id="loai-phong"><div id="lst-loai-phong"></div></div>
             </div>
           </div>
         </div>
@@ -112,8 +161,14 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/dist/js/adminlte.min.js"></script>
 <!-- Leaflet 1.7.1 -->
 <script src="bower_components/leaflet/leaflet.js"></script>
+<!-- Script -->
+<script src="/js/script.js"></script>
+<!-- jdGrid -->
+<script src="bower_components/jdgrid/js/jdgrid-v4.js" type="text/javascript"></script>
 <!-- Map -->
 <script src="js/map.js"></script>
 </body>

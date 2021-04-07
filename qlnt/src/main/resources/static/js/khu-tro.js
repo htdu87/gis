@@ -41,20 +41,20 @@ $(document).ready(function() {
     });
 
     $('#lst-phong-tro').jdGrid({
-            columns:[
-                {name:'sttPhong',title:'Số thứ tự phòng'},
-                {name:'tenLoaiPhong',title:'Loại phòng'},
-                {name:'tenTinhTrang',title:'Tình trạng'},
-                {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
-                    return '<a href="#" class="cmd cmd-edit-pt" rid="'+obj.idPhongTro+'" title="Chỉnh sửa"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del-pt" rid="'+obj.idPhongTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
-                }}
-            ],
-            extclass:'tbl-primary',
-            height:'400px',
-            shwno:true,
-            nolabel:'TT',
-            nocss:{'text-align':'center','width':'30px'}
-        });
+        columns:[
+            {name:'sttPhong',title:'Số thứ tự phòng'},
+            {name:'tenLoaiPhong',title:'Loại phòng'},
+            {name:'tenTinhTrang',title:'Tình trạng'},
+            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
+                return '<a href="#" class="cmd cmd-edit-pt" rid="'+obj.idPhongTro+'" title="Chỉnh sửa"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del-pt" rid="'+obj.idPhongTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
+            }}
+        ],
+        extclass:'tbl-primary',
+        height:'400px',
+        shwno:true,
+        nolabel:'TT',
+        nocss:{'text-align':'center','width':'30px'}
+    });
 
     $('#mod-khu-tro').on('shown.bs.modal', function (e) {
         if(dsTinhTp==null||dsQuanHuyen==null||dsXaPhuong==null||dsChuKhuTro==null) {

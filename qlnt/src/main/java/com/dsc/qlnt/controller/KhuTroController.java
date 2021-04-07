@@ -4,7 +4,7 @@ import com.dsc.qlnt.ModelAttr;
 import com.dsc.qlnt.Response;
 import com.dsc.qlnt.Utility;
 import com.dsc.qlnt.model.*;
-import com.dsc.qlnt.repository.PhongTroService;
+import com.dsc.qlnt.service.PhongTroService;
 import com.dsc.qlnt.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/ql-khu-tro")

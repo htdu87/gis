@@ -3,6 +3,7 @@ package com.dsc.qlnt.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -15,7 +16,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "khu_tro")
 public class KhuTro implements java.io.Serializable {
-
 	private Integer idKhuTro;
 	private ChuKhuTro chuKhuTro;
 	private XaPhuong xaPhuong;
@@ -25,6 +25,7 @@ public class KhuTro implements java.io.Serializable {
 	private double viDo;
 	private Set<KhoangCach> khoangCaches = new HashSet<KhoangCach>(0);
 	private Set<LoaiPhong> loaiPhongs = new HashSet<LoaiPhong>(0);
+	private int soPhongTrong;
 
 	public KhuTro() {
 	}
@@ -141,6 +142,15 @@ public class KhuTro implements java.io.Serializable {
 	}
 
 	@Transient
+	public int getSoPhongTrong() {
+		return soPhongTrong;
+	}
+
+	public void setSoPhongTrong(int soPhongTrong) {
+		this.soPhongTrong = soPhongTrong;
+	}
+
+	@Transient
 	public String getFullAddress() {
 		return String.format("%s, %s, %s, %s",
 				diaChi,
@@ -177,5 +187,15 @@ public class KhuTro implements java.io.Serializable {
 	@Transient
 	public String getSdtChuTro() {
 		return chuKhuTro.getSdt();
+	}
+
+	@Transient
+	public Date getNamSinhChuTro() {
+		return chuKhuTro.getNamSinh();
+	}
+
+	@Transient
+	public boolean isNu() {
+		return chuKhuTro.isNu();
 	}
 }

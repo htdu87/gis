@@ -7,6 +7,43 @@ var homeMarkerIcon = L.icon({
 });
 
 $(document).ready(function(){
+    $('#lst-phong-tro').jdGrid({
+        columns:[
+            {name:'sttPhong',title:'Số phòng'},
+            {name:'tenLoaiPhong',title:'Loại phòng'},
+            {name:'tenTinhTrang',title:'Tình trạng'}
+        ],
+        extclass:'tbl-primary',
+        height:'400px',
+        shwno:true,
+        nolabel:'TT',
+        nocss:{'text-align':'center','width':'30px'}
+    });
+
+    $('#lst-loai-phong').jdGrid({
+        columns:[
+            {name:'tenLoaiPhong',title:'Tên Loại phòng'},
+            {name:'dienTich',title:'D.Tích (m<sup>2</sup>)',css:{'text-align':'right'}},
+            {name:'soNguoiO',title:'SN Ở',css:{'text-align':'right'}},
+            {name:'coGac',title:'Gác',type:'check',css:{'text-align':'center','width':'40px'}},
+            {name:'giaThueHienTai',title:'Giá thuê',format:true,css:{'text-align':'right'}},
+            {name:'moTa',title:'Mô tả'}
+        ],
+        extclass:'tbl-primary',
+        height:'400px',
+        shwno:true,
+        nolabel:'TT',
+        nocss:{'text-align':'center','width':'30px'}
+    });
+
+    $('#mod-tt-khu-tro').on('shown.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+        var id=button.data('rid');
+        if(id != undefined) {
+            layTtKhuTro(id);
+        }
+    });
+
     var mapOptions = {
         center: [10.0279603,105.7664918],
         zoom: 15
@@ -42,7 +79,7 @@ function drawTinhTp(id, map) {
             };
             L.geoJSON(geoJSONFeature).addTo(map);
         }, error: function(jqXHR) {
-        }, completed: function() {
+        }, complete: function() {
         }
     });
 }
@@ -60,7 +97,7 @@ function drawXaPhuong(id, map) {
             };
             L.geoJSON(geoJSONFeature).addTo(map);
         }, error: function(jqXHR) {
-        }, completed: function() {
+        }, complete: function() {
         }
     });
 }
@@ -81,7 +118,37 @@ function drawKhuTro(map) {
             }
         }, error: function(jqXHR) {
             alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
-        }, completed: function() {
+        }, complete: function() {
+        }
+    });
+}
+
+function layTtKhuTro(id) {
+    $.ajax({
+        url:prefURL+'/lay-tt-khu-tro',
+        method:'post',
+        data:{id:id},
+        beforeSend: function() {
+            showBoxLoading('mod-body');
+        }, success: function(res) {
+            if(res.resCode>0) {
+                $('#lst-phong-tro').data('jdgrid').fillData(res.resData.phongTro);
+                $('#lst-loai-phong').data('jdgrid').fillData(res.resData.loaiPhong);
+
+                $('#spn-ten').text(res.resData.khuTro.tenKhuTro);
+                $('#spn-trong').text(res.resData.khuTro.soPhongTrong);
+                $('#spn-dc').text(res.resData.khuTro.fullAddress);
+                $('#spn-sdt').text(res.resData.khuTro.sdtChuTro);
+                $('#spn-ten-chu').text(res.resData.khuTro.tenChuKhuTro);
+                $('#spn-nu').text(res.resData.khuTro.nu?'Nữ':'Nam');
+                $('#spn-ns').text(res.resData.khuTro.namSinhChuTro==null?'':millisec2Date(res.resData.khuTro.namSinhChuTro,'dd/mm/yyyy'));
+            } else {
+                alert('Lấy thông tin nhà trọ không thành công, vui lòng thử lại sau');
+            }
+        }, error: function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete: function() {
+            hideBoxLoading('mod-body');
         }
     });
 }

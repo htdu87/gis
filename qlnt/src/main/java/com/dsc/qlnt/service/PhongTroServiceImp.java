@@ -1,6 +1,7 @@
-package com.dsc.qlnt.repository;
+package com.dsc.qlnt.service;
 
 import com.dsc.qlnt.model.PhongTro;
+import com.dsc.qlnt.repository.PhongTroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class PhongTroServiceImp implements PhongTroService {
 
     @Override
     public List<PhongTro> layDsPhongTroTheoIdKhuTro(Integer id) {
-        return phongTroRepo.findByLoaiPhong_KhuTro_IdKhuTro(id);
+        return phongTroRepo.findByLoaiPhong_KhuTro_IdKhuTroOrderByTinhTrang_IdTinhTrangAsc(id);
     }
 
     @Override
@@ -29,5 +30,10 @@ public class PhongTroServiceImp implements PhongTroService {
     @Override
     public void xoa(Integer id) {
         phongTroRepo.deleteById(id);
+    }
+
+    @Override
+    public Integer demPhongTrong(Integer idKhuTro) {
+        return phongTroRepo.demPhongTroConTrong(idKhuTro);
     }
 }

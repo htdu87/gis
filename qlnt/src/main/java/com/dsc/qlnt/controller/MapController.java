@@ -1,15 +1,22 @@
 package com.dsc.qlnt.controller;
 
 import com.dsc.qlnt.Response;
-import com.dsc.qlnt.model.TinhTp;
-import com.dsc.qlnt.model.XaPhuong;
+import com.dsc.qlnt.model.*;
+import com.dsc.qlnt.service.PhongTroService;
 import com.dsc.qlnt.service.KhuTroService;
+import com.dsc.qlnt.service.LoaiPhongService;
 import com.dsc.qlnt.service.TinhTpService;
 import com.dsc.qlnt.service.XaPhuongService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/map")
@@ -20,6 +27,10 @@ public class MapController {
     private XaPhuongService xaPhuongSer;
     @Autowired
     private KhuTroService khuTroSer;
+    @Autowired
+    private LoaiPhongService loaiPhongSer;
+    @Autowired
+    private PhongTroService phongTroSer;
 
     @RequestMapping("")
     public String showView() {
@@ -42,5 +53,28 @@ public class MapController {
     @ResponseBody
     public Response layDsKhuTro() {
         return new Response(1, khuTroSer.layDsKhuTro("","",-1,-1,-1,-1));
+    }
+
+    @RequestMapping("/lay-tt-khu-tro")
+    @ResponseBody
+    public Response layTtKhuTro(Integer id) {
+        KhuTro khuTro=khuTroSer.layKhuTroTheoId(id);
+        khuTro.setSoPhongTrong(phongTroSer.demPhongTrong(id));
+        List<PhongTro> dsPhongTro=phongTroSer.layDsPhongTroTheoIdKhuTro(id);
+        //Set<LoaiPhong> dsLoaiPhong=khuTro.getLoaiPhongs();//loaiPhongSer.layDsLoaiPhongTheoIdKhuTro(id);
+
+        ObjectMapper mapper=new ObjectMapper();
+        ObjectNode resData=mapper.createObjectNode();
+
+        ArrayNode nodePhongTro=mapper.valueToTree(dsPhongTro);
+        resData.putArray("phongTro").addAll(nodePhongTro);
+
+        ArrayNode nodeLoaiPhong=mapper.valueToTree(khuTro.getLoaiPhongs());
+        resData.putArray("loaiPhong").addAll(nodeLoaiPhong);
+
+        ObjectNode nodeKhuTro=mapper.valueToTree(khuTro);
+        resData.set("khuTro",nodeKhuTro);
+
+        return new Response(1,resData);
     }
 }
