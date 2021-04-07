@@ -22,7 +22,7 @@ $(document).ready(function() {
     });
 
     $('#mod-truong').on('shown.bs.modal', function (e) {
-        if(dsTinhTp==null||dsQuanHuyen==null||dsXaPhuong==null||dsChuKhuTro==null) {
+        if(dsTinhTp==null||dsQuanHuyen==null||dsXaPhuong==null) {
             init();
         }
     });
@@ -35,8 +35,8 @@ $(document).ready(function() {
         layXaPhuong($(this).val(),'cmb-xa', 'mod-body');
     });
 
-    $('#cmb-q-tinh').change(function() {
-        layQuanHuyen($(this).val(),'cmb-q-huyen', 'box-search');
+    $('#cmb-q-tinh').change(function(e, selectVal) {        
+        layQuanHuyen($(this).val(),'cmb-q-huyen', 'mod-body',selectVal==undefined?undefined:selectVal['idQuanHuyen'], selectVal==undefined?undefined:selectVal['idXaPhuong']);
     });
 
     $('#cmb-q-huyen').change(function() {
@@ -56,7 +56,7 @@ $(document).ready(function() {
 	});
 
    	init();
-    //layDanhSachTruong();
+    layDanhSachTruong();
 });
 
 function luu() {
@@ -71,9 +71,11 @@ function luu() {
             showBoxLoading('mod-body');
         }, success:function(res) {
             if(res.resCode>0) {
+            
                 showToastSuc(res.resMsg);
-                $('#mod-truong').modal('hide');
-                //clear();
+                layDanhSachTruong();
+                $('#mod-truong').modal('hide');                
+                clear();
             } else {
                 alert(res.resMsg);
             }
