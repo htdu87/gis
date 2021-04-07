@@ -77,4 +77,11 @@ public class MapController {
 
         return new Response(1,resData);
     }
+
+    @RequestMapping("/tim-khu-tro")
+    @ResponseBody
+    public Response timKiem(String keyword, Float distance, Double lat, Double lon) {
+        if (distance==null || distance==0) distance=-1f;
+        return new Response(1, khuTroSer.timKiem(keyword,lat,lon,distance));
+    }
 }

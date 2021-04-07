@@ -44,6 +44,10 @@ $(document).ready(function(){
         }
     });
 
+    $('#btn-search').click(function() {
+        timKhuTro();
+    });
+
     var mapOptions = {
         center: [10.0279603,105.7664918],
         zoom: 15
@@ -56,6 +60,11 @@ $(document).ready(function(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             myMap.panTo(new L.latLng(position.coords.latitude,position.coords.longitude));
+            $('#txt-lat').val(position.coords.latitude);
+            $('#txt-lon').val(position.coords.longitude);
+
+            var marker = new L.marker(new L.latLng(position.coords.latitude,position.coords.longitude),{title:'This is marker',alt:'This is marker'});
+            marker.addTo(myMap);
         });
     }
 
@@ -149,6 +158,30 @@ function layTtKhuTro(id) {
             alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
         }, complete: function() {
             hideBoxLoading('mod-body');
+        }
+    });
+}
+
+function timKhuTro() {
+    $.ajax({
+        url:prefURL+'/tim-khu-tro',
+        method:'post',
+        dataType:'json',
+        data:new FormData($('#frm-search')[0]),
+        processData:false,
+        contentType:false,
+        beforeSend: function() {
+            showBoxLoading('pnl-search');
+        }, success: function(res) {
+            if(res.resCode>0) {
+
+            } else {
+                alert('Lấy thông tin nhà trọ không thành công, vui lòng thử lại sau');
+            }
+        }, error: function(jqXHR) {
+            alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+        }, complete: function() {
+            hideBoxLoading('pnl-search');
         }
     });
 }

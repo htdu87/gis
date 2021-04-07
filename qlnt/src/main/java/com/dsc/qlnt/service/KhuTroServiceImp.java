@@ -31,4 +31,9 @@ public class KhuTroServiceImp implements KhuTroService {
     public void xoa(Integer id) {
         khuTroRepo.deleteById(id);
     }
+
+    @Override
+    public List<KhuTro> timKiem(String keyword, double lat, double lon, float distance) {
+        return khuTroRepo.timKiem(keyword, lat, lon, distance);
+    }
 }

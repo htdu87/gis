@@ -14,4 +14,6 @@ public interface KhuTroRepository extends CrudRepository<KhuTro,Integer> {
     List<KhuTro> search(String ten, String dc, Integer idXaPhuong, Integer idQuanHuyen, Integer idTTp, Integer idChuTro);
     @EntityGraph(attributePaths = {"loaiPhongs","khoangCaches"})
     Optional<KhuTro> findById(Integer id);
+    @Query(value = "call TIM_KHU_TRO(?1,?2,?3,?4)",nativeQuery = true)
+    List<KhuTro> timKiem(String keyword, double lat, double lon, float distance);
 }
