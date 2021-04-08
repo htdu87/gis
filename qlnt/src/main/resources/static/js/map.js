@@ -51,6 +51,20 @@ $(document).ready(function(){
         timKhuTro();
     });
 
+    $('#btn-close-search').click(function(e) {
+        e.preventDefault();
+        $('#pnl-search').animate({
+            left:'-410px'
+        });
+    });
+
+    $('#btn-open-search').click(function(e) {
+        e.preventDefault();
+        $('#pnl-search').animate({
+            left:'0px'
+        });
+    });
+
     $('#search-result').height($('#search-result').height()-240);
 
     var mapOptions = {
@@ -69,7 +83,7 @@ $(document).ready(function(){
             $('#txt-lat').val(position.coords.latitude);
             $('#txt-lon').val(position.coords.longitude);
 
-            var marker = new L.marker(new L.latLng(position.coords.latitude,position.coords.longitude),{title:'This is marker',alt:'This is marker'});
+            var marker = new L.marker(new L.latLng(position.coords.latitude,position.coords.longitude),{title:'Vị trí của bạn',alt:'Vị trí của bạn'});
             marker.addTo(myMap);
         });
     }
@@ -220,22 +234,36 @@ function timKhuTro() {
                     });
 
                     $('.btn-routing').click(function() {
+                        showBoxLoading('pnl-search');
                         var btn=$(this);
                         if(myRouting != null) {
                             myMap.removeControl(myRouting);
                         }
                         myRouting=L.Routing.control({
-                            //router: L.Routing.mapbox(APIKey),
                             waypoints: [
                                 L.latLng($('#txt-lat').val(), $('#txt-lon').val()),
                                 L.latLng(btn.attr('lat'), btn.attr('lon'))
                             ],
                             formatter: new L.Routing.Formatter({  }),
                             routeWhileDragging: true,
-                            language: 'vi'
+                            language: 'vi',
+                            collapsible: true
+                        }).on('routingstart', function() {
+                        }).on('routingerror', function() {
+                            hideBoxLoading('pnl-search');
+                            alert('Không thể tìm đường đi lúc này, vui lòng thử lại sau');
                         }).on('routesfound', function(e) {
+                            hideBoxLoading('pnl-search');
                             var routes = e.routes[0];
                             console.log('Found: ' + routes.summary.totalDistance + ' - '+routes.summary.totalTime);
+                            hideBoxLoading('pnl-search');
+
+                            $('.leaflet-routing-collapse-btn').click(function(e) {
+                                e.preventDefault();
+                                if(myRouting != null) {
+                                    myMap.removeControl(myRouting);
+                                }
+                            });
                         }).addTo(myMap);
                     });
                 } else {

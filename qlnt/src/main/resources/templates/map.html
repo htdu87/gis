@@ -94,8 +94,8 @@
       width:400px;
       height:100%;
       top:0;
-      left:0;
-      z-index:1000;
+      left:-410px;
+      z-index:1001;
       box-shadow:0px 0px 10px #333;
       padding:10px;
     }
@@ -143,6 +143,19 @@
     .leaflet-routing-alt h2 {
       font-weight:bold
     }
+
+    #btn-open-search {
+      position:fixed;
+      left:20px;
+      bottom:20px;
+      width:50px;
+      height:50px;
+      border-radius:50px;
+      z-index:1000;
+      text-align:center;
+      line-height:59px;
+      box-shadow:0px 0px 5px #333;
+    }
   </style>
 </head>
 <body class="hold-transition login-page">
@@ -178,6 +191,8 @@
     <div id="search-result">
     </div>
   </div>
+  <a href="#" role="button" class="btn-primary" title="Tìm kiếm nhà trọ" id="btn-open-search"><i class="fa fa-2x fa-search"></i></a>
+
   <!-- Modal thong tin tro -->
   <div class="modal" role="dialog" id="mod-tt-khu-tro">
     <div class="modal-dialog modal-lg" role="document">
