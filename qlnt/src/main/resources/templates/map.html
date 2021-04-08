@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <!-- Leaflet style -->
   <link rel="stylesheet" href="bower_components/leaflet/leaflet.css">
+  <link rel="stylesheet" href="bower_components/leaflet/leaflet-routing-machine.css">
   <!-- jdGrid style -->
   <link rel="stylesheet" href="bower_components/jdgrid/css/jdgrid.css"/>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -93,7 +94,7 @@
       width:400px;
       height:100%;
       top:0;
-      right:0;
+      left:0;
       z-index:1000;
       box-shadow:0px 0px 10px #333;
       padding:10px;
@@ -134,6 +135,14 @@
       height: 100%;
       overflow-y:scroll;
     }
+
+    hr {
+      margin-bottom:0px;
+    }
+
+    .leaflet-routing-alt h2 {
+      font-weight:bold
+    }
   </style>
 </head>
 <body class="hold-transition login-page">
@@ -167,44 +176,6 @@
       </div>
     </form>
     <div id="search-result">
-      <div class="media">
-        <div class="media-body">
-          <h4 class="media-heading">Nhà trọ Thảo</h4>
-          <b>Chủ trọ:</b>b Võ Phước Đức<br/>
-          ĐC: 50, Nguyễn Trãi, Phường 4, Thành Phố Cà Mau, Tỉnh Cà Mau<br/>
-          SĐT: 0947525689
-          <button type="button" class="btn btn-primary btn-flat pull-right btn-sm" style="margin-right:5px"><i class="fa fa-map-marker"></i></button>
-          <button type="button" class="btn btn-primary btn-flat pull-right btn-sm" style="margin-right:5px"><i class="fa fa-map-signs"></i></button>
-        </div>
-      </div>
-      <hr/>
-      <div class="media">
-        <div class="media-body">
-          <h4 class="media-heading">Nhà trọ Thảo</h4>
-          Chủ trọ: Võ Phước Đức<br/>
-          ĐC: 50, Nguyễn Trãi, Phường 4, Thành Phố Cà Mau, Tỉnh Cà Mau<br/>
-          SĐT: 0947525689
-        </div>
-      </div>
-      <hr/>
-      <div class="media">
-        <div class="media-body">
-          <h4 class="media-heading">Nhà trọ Thảo</h4>
-          Chủ trọ: Võ Phước Đức<br/>
-          ĐC: 50, Nguyễn Trãi, Phường 4, Thành Phố Cà Mau, Tỉnh Cà Mau<br/>
-          SĐT: 0947525689
-        </div>
-      </div>
-      <hr/>
-      <div class="media">
-        <div class="media-body">
-          <h4 class="media-heading">Nhà trọ Thảo</h4>
-          <b>Chủ trọ:</b>b Võ Phước Đức<br/>
-          ĐC: 50, Nguyễn Trãi, Phường 4, Thành Phố Cà Mau, Tỉnh Cà Mau<br/>
-          SĐT: 0947525689
-        </div>
-      </div>
-      <hr/>
     </div>
   </div>
   <!-- Modal thong tin tro -->
@@ -243,7 +214,7 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">SĐT Liên hệ</label>
                   <div class="col-sm-7">
-                    <p class="form-control-static"><span id="spn-sdt"></span></p>
+                    <p class="form-control-static"><span id="spn-sdt"></span> <a class="btn btn-primary btn-sm" id="btn-call" style="padding:2px 10px"><i class="fa fa-phone"></i> Gọi</a></p>
                   </div>
                 </div>
                 <div class="form-group">
@@ -281,6 +252,7 @@
 <script src="/dist/js/adminlte.min.js"></script>
 <!-- Leaflet 1.7.1 -->
 <script src="bower_components/leaflet/leaflet.js"></script>
+<script src="bower_components/leaflet/leaflet-routing-machine.js"></script>
 <!-- Script -->
 <script src="/js/script.js"></script>
 <!-- jdGrid -->

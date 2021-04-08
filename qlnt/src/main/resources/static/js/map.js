@@ -5,6 +5,9 @@ var homeMarkerIcon = L.icon({
     iconAnchor: [22, 94],
     popupAnchor: [-3, -76]
 });
+var myMap;
+var myMarker;
+var myRouting;
 
 $(document).ready(function(){
     $('#lst-phong-tro').jdGrid({
@@ -48,12 +51,15 @@ $(document).ready(function(){
         timKhuTro();
     });
 
+    $('#search-result').height($('#search-result').height()-240);
+
     var mapOptions = {
         center: [10.0279603,105.7664918],
-        zoom: 15
+        zoom: 15,
+        zoomControl: false
     };
 
-    var myMap = new L.map('map-container', mapOptions);
+    myMap = new L.map('map-container', mapOptions);
     var layer = new L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {maxZoom: 20,subdomains: ['mt0', 'mt1', 'mt2', 'mt3']});
     myMap.addLayer(layer);
 
@@ -73,7 +79,6 @@ $(document).ready(function(){
     //drawTinhTp(2, myMap);
     //drawXaPhuong(2, myMap);
 });
-
 
 function drawTinhTp(id, map) {
     $.ajax({
@@ -120,7 +125,7 @@ function drawKhuTro(map) {
             var size=res.resData.length;
             for(var i=0;i<size;i++) {
                 var kt=res.resData[i];
-                var popup = L.popup().setContent('<h4>'+kt.tenKhuTro+'</h4><ul class="marker-ul"><li><i class="fa fa-map-signs"></i> '+kt.fullAddress+'</li><li><i class="fa fa-phone"></i> <b>'+kt.sdtChuTro+'</b></li></ul><a href="#" data-rid="'+kt.idKhuTro+'" data-target="#mod-tt-khu-tro" data-toggle="modal">Xem chi tiết</a>');
+                var popup = L.popup().setContent('<h4>'+kt.tenKhuTro+'</h4><ul class="marker-ul"><li><i class="fa fa-map-signs"></i> '+kt.fullAddress+'</li><li><a href="tel:'+kt.sdtChuTro+'"><i class="fa fa-phone"></i> <b>'+kt.sdtChuTro+'</b></a></li></ul><a href="#" data-rid="'+kt.idKhuTro+'" data-target="#mod-tt-khu-tro" data-toggle="modal">Xem chi tiết</a>');
                 var marker = new L.marker(new L.latLng(kt.viDo, kt.kinhDo),{title:kt.tenKhuTro, alt:kt.tenKhuTro, icon:homeMarkerIcon});
                 marker.bindPopup(popup).openPopup();
                 marker.addTo(map);
@@ -151,6 +156,7 @@ function layTtKhuTro(id) {
                 $('#spn-ten-chu').text(res.resData.khuTro.tenChuKhuTro);
                 $('#spn-nu').text(res.resData.khuTro.nu?'Nữ':'Nam');
                 $('#spn-ns').text(res.resData.khuTro.namSinhChuTro==null?'':millisec2Date(res.resData.khuTro.namSinhChuTro,'dd/mm/yyyy'));
+                $('#btn-call').attr('href','tel:'+res.resData.khuTro.sdtChuTro);
             } else {
                 alert('Lấy thông tin nhà trọ không thành công, vui lòng thử lại sau');
             }
@@ -172,9 +178,69 @@ function timKhuTro() {
         contentType:false,
         beforeSend: function() {
             showBoxLoading('pnl-search');
+            $('#search-result').empty();
         }, success: function(res) {
             if(res.resCode>0) {
+                var count=res.resData.length;
+                if(count > 0) {
+                    $('#search-result').append('<p class="text-muted"><i>Tìm thấy <b>'+count+'</b> kết quả:</i></p>');
+                    for(var i=0;i<count;i++) {
+                        var media=$('<div>').addClass('media');
+                        var mediaBody=$('<div>').addClass('media-body');
+                        var mediaTitle=$('<h4>').addClass('media-heading').html(res.resData[i].tenKhuTro);
+                        var mediaContent=$('<span>').html('<b>Chủ trọ:</b> '+res.resData[i].tenChuKhuTro+'<br/><b>ĐC:</b> '+res.resData[i].fullAddress+'<br/><b>SĐT:</b> '+res.resData[i].sdtChuTro);
+                        var btnLocate=$('<button title="Xem trên bản đổ" class="btn-locate">').attr('type','button').attr('lat',res.resData[i].viDo).attr('lon',res.resData[i].kinhDo).addClass('btn btn-primary btn-flat pull-right btn-sm').html('<i class="fa fa-map-marker"></i>');
+                        var btnRouting=$('<button title="Chỉ đường" class="btn-routing">').attr('type','button').attr('lat',res.resData[i].viDo).attr('lon',res.resData[i].kinhDo).addClass('btn btn-primary btn-flat pull-right btn-sm').html('<i class="fa fa-map-signs"></i>');
+                        var btnDetail=$('<a href="#" data-target="#mod-tt-khu-tro" data-toggle="modal" role="button" title="Xem thông tin">').attr('data-rid',res.resData[i].idKhuTro).addClass('btn btn-primary btn-flat pull-right btn-sm').html('<i class="fa fa-info-circle"></i>');
 
+                        mediaBody.append(mediaTitle);
+                        mediaBody.append(mediaContent);
+                        mediaBody.append(btnLocate);
+                        mediaBody.append(btnRouting);
+                        mediaBody.append(btnDetail);
+                        mediaBody.append('<hr/>');
+
+                        media.append(mediaBody);
+
+                        $('#search-result').append(media);
+                    }
+
+                    $('.btn-locate').click(function() {
+                        var btn=$(this);
+                        myMap.eachLayer(function(layer) {
+                            if(layer instanceof L.Marker) {
+                                mLatLng=layer.getLatLng();
+                                if(mLatLng.lat==btn.attr('lat') && mLatLng.lng==btn.attr('lon')) {
+                                    layer.openPopup();
+                                    myMap.panTo(mLatLng);
+                                    return false;
+                                }
+                            }
+                        });
+                    });
+
+                    $('.btn-routing').click(function() {
+                        var btn=$(this);
+                        if(myRouting != null) {
+                            myMap.removeControl(myRouting);
+                        }
+                        myRouting=L.Routing.control({
+                            //router: L.Routing.mapbox(APIKey),
+                            waypoints: [
+                                L.latLng($('#txt-lat').val(), $('#txt-lon').val()),
+                                L.latLng(btn.attr('lat'), btn.attr('lon'))
+                            ],
+                            formatter: new L.Routing.Formatter({  }),
+                            routeWhileDragging: true,
+                            language: 'vi'
+                        }).on('routesfound', function(e) {
+                            var routes = e.routes[0];
+                            console.log('Found: ' + routes.summary.totalDistance + ' - '+routes.summary.totalTime);
+                        }).addTo(myMap);
+                    });
+                } else {
+                    $('#search-result').html('<p class="text-muted text-center"><i>Không tìm thấy kết quả phù hợp</i></p>');
+                }
             } else {
                 alert('Lấy thông tin nhà trọ không thành công, vui lòng thử lại sau');
             }
