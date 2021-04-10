@@ -8,6 +8,7 @@ var homeMarkerIcon = L.icon({
 var myMap;
 var myMarker;
 var myRouting;
+var geoCoder;
 
 $(document).ready(function(){
     $('#lst-phong-tro').jdGrid({
@@ -73,6 +74,8 @@ $(document).ready(function(){
         zoomControl: false
     };
 
+    geoCoder = L.Control.Geocoder.nominatim();
+
     myMap = new L.map('map-container', mapOptions);
     var layer = new L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {maxZoom: 20,subdomains: ['mt0', 'mt1', 'mt2', 'mt3']});
     myMap.addLayer(layer);
@@ -83,8 +86,21 @@ $(document).ready(function(){
             $('#txt-lat').val(position.coords.latitude);
             $('#txt-lon').val(position.coords.longitude);
 
-            var marker = new L.marker(new L.latLng(position.coords.latitude,position.coords.longitude),{title:'Vị trí của bạn',alt:'Vị trí của bạn'});
+            var marker = new L.marker(new L.latLng(position.coords.latitude,position.coords.longitude),{title:'Vị trí của bạn',alt:'Vị trí của bạn',draggable:'true'});
+            var popup = L.popup().setContent('<h4>Vị trí của bạn</h4>');
+            marker.bindPopup(popup).openPopup();
+            marker.on('dragend', function(e) {
+                $('#txt-lat').val(marker.getLatLng().lat);
+                $('#txt-lon').val(marker.getLatLng().lng);
+                findAddress(myMap, geoCoder, marker.getLatLng(),function(add) {
+                    popup.setContent('<h4>Vị trí của bạn</h4><i>'+add+'</i>');
+                });
+            });
+
             marker.addTo(myMap);
+            findAddress(myMap, geoCoder, new L.latLng(position.coords.latitude,position.coords.longitude), function(add) {
+                popup.setContent('<h4>Vị trí của bạn</h4><i>'+add+'</i>');
+            });
         });
     }
 
@@ -93,6 +109,20 @@ $(document).ready(function(){
     //drawTinhTp(2, myMap);
     //drawXaPhuong(2, myMap);
 });
+
+function findAddress(map, geoCoder, latlng, func) {
+    geoCoder.reverse(latlng, map.options.crs.scale(map.getZoom()), function(results) {
+        //console.log(results);
+        var r = results[0];
+        if (r) {
+            console.log('addr found: '+r.name);
+            func(r.name);
+        } else {
+            console.log('Address not found');
+            func('Không xác định');
+        }
+    });
+}
 
 function drawTinhTp(id, map) {
     $.ajax({

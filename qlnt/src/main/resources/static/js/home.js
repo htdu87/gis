@@ -172,8 +172,8 @@ function drawMap(idHuyen) {
         }, success: function(res) {
             if(myMap==null) {
                 myMap = new L.map('map-container', {center: [9.1881472,105.15906559999999],zoom: 12,zoomControl: false});
-                /*var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-                myMap.addLayer(layer);*/
+                var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+                myMap.addLayer(layer);
             } else {
                 myMap.eachLayer(function(layer) {
                     if(layer instanceof L.Polygon) {
@@ -215,6 +215,13 @@ function drawMap(idHuyen) {
                     layer.bindPopup('<h4>'+obj.tenXaPhuong+'</h4><h5><i>'+obj.tenQuanHuyen+' - '+obj.tenTinhTp+'</i></h5><p>Số lượng nhà trọ: <b>'+obj.soLuongNhaTro+'</b></p>');
                 }}).addTo(myMap);
                 //console.log(obj.tenXaPhuong,obj.soLuongNhaTro, idx);
+            });
+
+            myMap.eachLayer(function(layer) {
+                if(layer instanceof L.Polygon) {
+                    myMap.panTo(layer.getBounds().getCenter());
+                    return false;
+                }
             });
         }, error: function(jqXHR) {
         }, complete: function() {
