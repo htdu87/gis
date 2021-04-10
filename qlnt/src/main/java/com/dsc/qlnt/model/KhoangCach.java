@@ -1,6 +1,8 @@
 package com.dsc.qlnt.model;
 // Generated Mar 27, 2021 12:16:42 AM by Hibernate Tools 4.3.5.Final
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -45,6 +47,7 @@ public class KhoangCach implements java.io.Serializable {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_KHU_TRO", nullable = false, insertable = false, updatable = false)
 	public KhuTro getKhuTro() {
@@ -55,6 +58,7 @@ public class KhoangCach implements java.io.Serializable {
 		this.khuTro = khuTro;
 	}
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TRUONG", nullable = false, insertable = false, updatable = false)
 	public Truong getTruong() {

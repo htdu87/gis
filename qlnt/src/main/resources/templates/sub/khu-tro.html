@@ -116,17 +116,28 @@
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
-                                <input type="text" name="diaChi" id="txt-dia-chi" class="form-control" placeholder="Số nhà, tên đường">
+                                <div class="input-group">
+                                    <input type="text" name="diaChi" id="txt-dia-chi" class="form-control" placeholder="Số nhà, tên đường">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-flat btn-default" title="Tìm tọa độ" id="btn-find-coordinate"><i class="fa fa-map-marker"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 text-center">
+                        <div class="col-md-12 text-center form-group">
+                            <button type="button" class="btn btn-flat btn-success" id="btn-computing"><i class="fa fa-map"></i> Tính khoảng cách</button>
                             <button type="button" class="btn btn-flat btn-primary" id="btn-save"><i class="fa fa-check"></i> Lưu thông tin</button>
                             <button class="btn btn-flat btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
                         </div>
                     </div>
                 </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="lst-truong"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

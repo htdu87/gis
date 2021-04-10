@@ -4,6 +4,9 @@ var dsTinhTp;
 var dsQuanHuyen;
 var dsXaPhuong;
 var dsChuKhuTro;
+var dsTruong;
+var dsKhoangCach=[];
+var myGeoCoder=new L.Control.Geocoder.Nominatim();
 
 $(document).ready(function() {
     $('#lst-item').jdGrid({
@@ -47,6 +50,22 @@ $(document).ready(function() {
             {name:'tenTinhTrang',title:'Tình trạng'},
             {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
                 return '<a href="#" class="cmd cmd-edit-pt" rid="'+obj.idPhongTro+'" title="Chỉnh sửa"><i class="fa fa-edit"></i></a><a href="#" class="cmd cmd-del-pt" rid="'+obj.idPhongTro+'" title="Xóa"><i class="fa fa-trash text-danger"></i></a>';
+            }}
+        ],
+        extclass:'tbl-primary',
+        height:'400px',
+        shwno:true,
+        nolabel:'TT',
+        nocss:{'text-align':'center','width':'30px'}
+    });
+
+    $('#lst-truong').jdGrid({
+        columns:[
+            {name:'tenTruong',title:'Tên trường'},
+            {name:'diaChi',title:'Địa chỉ'},
+            {name:'distance',title:'K.Cách (m)',css:{'text-align':'center'}},
+            {name:'',title:'T.Tác',type:'control',css:{'text-align':'center'},content:function(obj) {
+                return '<a href="#" class="cmd cmd-re-computing" rid="'+obj.idTruong+'" lat="'+obj.viDo+'" lon="'+obj.kinhDo+'" title="Tính lại khoảng cách"><i class="fa fa-refresh"></i></a>';
             }}
         ],
         extclass:'tbl-primary',
@@ -178,6 +197,32 @@ $(document).ready(function() {
         clearPhongTro();
     });
 
+    $('#btn-computing').click(function() {
+        if($('#txt-lat').val()=='' || $('#txt-lon').val()=='') {
+            alert('Vui lòng nhập tọa độ khu trọ');
+        } else {
+            dsKhoangCach=[];
+            tinhKhoangCach();
+        }
+    });
+
+    $('#btn-find-coordinate').click(function() {
+        showBoxLoading('mod-body');
+        myGeoCoder.geocode($('#txt-dia-chi').val()+','+$('#cmb-xa option:selected').text()+', '+$('#cmb-huyen option:selected').text()+','+$('#cmb-tinh option:selected').text()+', Viet Nam', function(results) {
+            hideBoxLoading('mod-body');
+            if(results.length>0) {
+                $('#txt-lat').val(results[0].center.lat);
+                $('#txt-lon').val(results[0].center.lng);
+            } else {
+                alert('Không tìm thấy tọa độ tương ứng với địa chỉ');
+            }
+           /*latLng= new L.LatLng(results[0].center.lat, results[0].center.lng);
+           marker = new L.Marker (latLng);
+           map.addlayer(marker);*/
+           console.log(results);
+        });
+    });
+
     init();
 });
 
@@ -190,11 +235,13 @@ function clear() {
 }
 
 function luu() {
+    var formData=new FormData($('#frm-khu-tro')[0]);
+    formData.append('strKC',JSON.stringify(dsKhoangCach));
     $.ajax({
         url:prefURL+'/luu',
         method:'post',
         dataType:'json',
-        data:new FormData($('#frm-khu-tro')[0]),
+        data:formData,
         processData:false,
         contentType:false,
         beforeSend:function() {
@@ -254,6 +301,7 @@ function init() {
                 dsQuanHuyen=res.resData['quanHuyen'];
                 dsXaPhuong=res.resData['xaPhuong'];
                 dsChuKhuTro=res.resData['chuKhuTro'];
+                dsTruong=res.resData.truong;
 
                 $.each(dsTinhTp,function(i,obj){
                     $('#cmb-tinh, #cmb-q-tinh').append($('<option>', {
@@ -278,6 +326,13 @@ function init() {
                         value: obj.idChuKhuTro,
                         text : obj.hoTen
                     }));
+                });
+
+                $('#lst-truong').data('jdgrid').fillData(res.resData.truong);
+                $('.cmd-re-computing').click(function(e) {
+                    e.preventDefault();
+                    //console.log($('.cmd-re-computing').index($(this)));
+                    tinhKhoangCach($('.cmd-re-computing').index($(this)), $(this).attr('lat'), $(this).attr('lon'), $(this).attr('rid'));
                 });
 
                 layDsKhuTro();
@@ -372,14 +427,23 @@ function layTtKhuTro(id) {
             showBoxLoading('mod-body');
         }, success:function(res) {
             if(res.resCode>0) {
-                $('#txt-id').val(res.resData.idKhuTro);
-                $('#txt-ten').val(res.resData.tenKhuTro);
-                $('#txt-dia-chi').val(res.resData.diaChi);
-                $('#txt-lat').val(res.resData.kinhDo);
-                $('#txt-lon').val(res.resData.viDo);
-                $('#cmb-chu-tro').val(res.resData.idChuTro);
-                $('#cmb-tinh').val(res.resData.idTinhTp);
-                $('#cmb-tinh').trigger('change', {'idQuanHuyen':res.resData.idQuanHuyen,'idXaPhuong':res.resData.idXaPhuong});
+                $('#txt-id').val(res.resData.khuTro.idKhuTro);
+                $('#txt-ten').val(res.resData.khuTro.tenKhuTro);
+                $('#txt-dia-chi').val(res.resData.khuTro.diaChi);
+                $('#txt-lat').val(res.resData.khuTro.viDo);
+                $('#txt-lon').val(res.resData.khuTro.kinhDo);
+                $('#cmb-chu-tro').val(res.resData.khuTro.idChuTro);
+                $('#cmb-tinh').val(res.resData.khuTro.idTinhTp);
+                $('#cmb-tinh').trigger('change', {'idQuanHuyen':res.resData.khuTro.idQuanHuyen,'idXaPhuong':res.resData.khuTro.idXaPhuong});
+
+                dsKhoangCach=res.resData.khoangCach;
+                var grid=$('#lst-truong').data('jdgrid');
+                for(var i=0;i<dsTruong.length;i++) {
+                    grid.setCellContent(i,2,'');
+                }
+                $.each(res.resData.khoangCach,function(i, obj) {
+                    grid.setCellContent(obj.id.idTruong-1,2,obj.khoangCach);
+                });
             } else {
                 alert(res.resMsg);
             }
@@ -674,4 +738,74 @@ function xoaPhongTro(id) {
             hideBoxLoading('mod-body-phong-tro');
         }
     });
+}
+
+function tinhKhoangCach(idx, lat, lon,idTruong) {
+    var grid=$('#lst-truong').data('jdgrid');
+    var myRoute = L.Routing.osrmv1();
+
+    if(idx==undefined || lat==undefined || lon==undefined || idTruong==undefined) {
+
+        $.each(dsTruong, function(i, obj) {
+            grid.setCellContent(i,2,'<i class="fa fa-spinner fa-spin"></i>');
+
+            var wayPoint1 = L.latLng($('#txt-lat').val(), $('#txt-lon').val());
+            var wayPoint2 = L.latLng(obj.viDo, obj.kinhDo);
+
+            var rWP1 = new L.Routing.Waypoint;
+            rWP1.latLng = wayPoint1;
+
+            var rWP2 = new L.Routing.Waypoint;
+            rWP2.latLng = wayPoint2;
+
+            myRoute.route([rWP1, rWP2], function(err, routes) {
+                console.log(err);
+                if(err) {
+                    grid.setCellContent(i,2,'Err');
+                } else {
+                    var kc={};
+                    distance = routes[0].summary.totalDistance;
+                    //console.log('routing distance: ('+i+')('+obj.tenTruong+'): ' + distance);
+                    //console.log(routes);
+                    grid.setCellContent(i,2,distance);
+                    var idck={};
+
+                    idck.idTruong=Number(obj.idTruong);
+                    idck.idKhuTro=Number($('#txt-id').val());
+                    kc.id=idck;
+                    kc.khoangCach=distance;
+                    dsKhoangCach.push(kc);
+                }
+            });
+        });
+    } else {
+        grid.setCellContent(idx,2,'<i class="fa fa-spinner fa-spin"></i>');
+
+        var wayPoint1 = L.latLng($('#txt-lat').val(), $('#txt-lon').val());
+        var wayPoint2 = L.latLng(lat, lon);
+
+        var rWP1 = new L.Routing.Waypoint;
+        rWP1.latLng = wayPoint1;
+
+        var rWP2 = new L.Routing.Waypoint;
+        rWP2.latLng = wayPoint2;
+
+        myRoute.route([rWP1, rWP2], function(err, routes) {
+            console.log(err);
+            if(err) {
+                grid.setCellContent(idx,2,'Err');
+            } else {
+                var kc={};
+                distance = routes[0].summary.totalDistance;
+                grid.setCellContent(idx,2,distance);
+                var idck={};
+
+                idck.idTruong=Number(idTruong);
+                idck.idKhuTro=Number($('#txt-id').val());
+                kc.id=idck;
+                kc.khoangCach=distance;
+                dsKhoangCach[idx]=kc;
+            }
+        });
+    }
 }

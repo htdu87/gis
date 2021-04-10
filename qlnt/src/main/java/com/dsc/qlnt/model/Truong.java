@@ -67,6 +67,7 @@ public class Truong implements java.io.Serializable {
 		this.idTruong = idTruong;
 	}
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_XA_PHUONG", nullable = false)
 	public XaPhuong getXaPhuong() {

@@ -6,6 +6,7 @@ import com.dsc.qlnt.Utility;
 import com.dsc.qlnt.model.*;
 import com.dsc.qlnt.service.PhongTroService;
 import com.dsc.qlnt.service.*;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/ql-khu-tro")
@@ -44,6 +43,8 @@ public class KhuTroController {
     private TinhTrangService tinhTrangSer;
     @Autowired
     private PhongTroService phongTroSer;
+    @Autowired
+    private TruongService truongSer;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -57,8 +58,8 @@ public class KhuTroController {
         ModelAttr modelAttr=new ModelAttr(Utility.layNguoiDungHienTai(),
                 "Quản lý khu trọ",
                 "sub/khu-tro",
-                new String[]{"/bower_components/jdgrid/js/jdgrid-v4.js","js/khu-tro.js"},
-                new String[]{"/bower_components/jdgrid/css/jdgrid.css"}
+                new String[]{"/bower_components/leaflet/leaflet.js","/bower_components/leaflet/leaflet-routing-machine.js","/bower_components/leaflet/Control.Geocoder.js","/bower_components/jdgrid/js/jdgrid-v4.js","js/khu-tro.js"},
+                new String[]{"/bower_components/leaflet/leaflet.css","/bower_components/leaflet/leaflet.css","/bower_components/leaflet/Control.Geocoder.css","/bower_components/jdgrid/css/jdgrid.css"}
         );
         model.addAttribute("MODEL",modelAttr);
         return "layout";
@@ -71,6 +72,7 @@ public class KhuTroController {
         List<QuanHuyen> dsQuanHuyen=dsTinhTp.size()>0?quanHuyenSer.layDsQuanHuyen(dsTinhTp.get(0).getIdTinhTp()):new ArrayList<>();
         List<XaPhuong> dsXaPhuong=dsQuanHuyen.size()>0?xaPhuongSer.layDsXaPhuong(dsQuanHuyen.get(0).getIdQuanHuyen()):new ArrayList<>();
         List<ChuKhuTro> dsChuKhuTro=chuKhuTroSer.layDsChuKhuTro("","");
+        List<Truong> dsTruong=truongSer.layDanhSachTruong();
 
         for (TinhTp ttp:dsTinhTp) {
             ttp.setPolygon("");
@@ -97,6 +99,9 @@ public class KhuTroController {
         ArrayNode nodeChuKhuTro=mapper.valueToTree(dsChuKhuTro);
         resData.putArray("chuKhuTro").addAll(nodeChuKhuTro);
 
+        ArrayNode nodeTruong=mapper.valueToTree(dsTruong);
+        resData.putArray("truong").addAll(nodeTruong);
+
         return new Response(1, resData);
     }
 
@@ -114,10 +119,20 @@ public class KhuTroController {
 
     @RequestMapping("/luu")
     @ResponseBody
-    public Response luuThongTin(KhuTro kt) {
+    public Response luuThongTin(KhuTro kt, String strKC) {
         if (xaPhuongSer.kiemTraViTri(kt.getViDo(),kt.getKinhDo(),kt.getXaPhuong().getIdXaPhuong())) {
+            ObjectMapper mapper = new ObjectMapper();
             try {
-                khuTroSer.luu(kt);
+                KhuTro nkt=khuTroSer.luu(kt);
+                Set<KhoangCach> dsKhoangCach=mapper.readValue(strKC, new TypeReference<Set<KhoangCach>>(){});
+                for (KhoangCach kc : dsKhoangCach) {
+                    if(kc!=null)
+                        kc.getId().setIdKhuTro(nkt.getIdKhuTro());
+                }
+                nkt=khuTroSer.layKhuTroTheoId(nkt.getIdKhuTro());
+                nkt.getKhoangCaches().clear();
+                nkt.getKhoangCaches().addAll(dsKhoangCach);
+                khuTroSer.luu(nkt);
                 return new Response(1,"Lưu thông tin thành công!");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -137,7 +152,18 @@ public class KhuTroController {
     @RequestMapping("/lay-khu-tro")
     @ResponseBody
     public Response layTtKhuTro(Integer id) {
-        return new Response(1, khuTroSer.layKhuTroTheoId(id));
+        KhuTro kt=khuTroSer.layKhuTroTheoId(id);
+
+        ObjectMapper mapper=new ObjectMapper();
+        ObjectNode resData=mapper.createObjectNode();
+
+        ArrayNode nodeKhoangCach=mapper.valueToTree(kt.getKhoangCaches());
+        resData.putArray("khoangCach").addAll(nodeKhoangCach);
+
+        ObjectNode nodeKhuTro=mapper.valueToTree(kt);
+        resData.set("khuTro",nodeKhuTro);
+
+        return new Response(1, resData);
     }
 
     @RequestMapping("/xoa-khu-tro")

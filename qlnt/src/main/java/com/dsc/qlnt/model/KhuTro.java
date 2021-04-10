@@ -122,7 +122,8 @@ public class KhuTro implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "khuTro")
+	@OrderBy("id.idTruong ASC")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "khuTro",cascade = CascadeType.ALL, orphanRemoval = true)
 	public Set<KhoangCach> getKhoangCaches() {
 		return this.khoangCaches;
 	}
