@@ -10,4 +10,5 @@ public interface KhuTroService {
     KhuTro layKhuTroTheoId(Integer id);
     void xoa(Integer id) throws Exception;
     List<KhuTro> timKiem(String keyword, double lat, double lon, float distance);
+    List<Object[]> thongKeTheoTinh();
 }

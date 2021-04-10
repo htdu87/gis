@@ -36,4 +36,9 @@ public class PhongTroServiceImp implements PhongTroService {
     public Integer demPhongTrong(Integer idKhuTro) {
         return phongTroRepo.demPhongTroConTrong(idKhuTro);
     }
+
+    @Override
+    public List<Object[]> thongKeTheoTinhTrang() {
+        return phongTroRepo.demPhongTroTheoTinhTrang();
+    }
 }

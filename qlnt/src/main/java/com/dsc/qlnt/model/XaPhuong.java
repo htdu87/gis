@@ -119,4 +119,9 @@ public class XaPhuong implements java.io.Serializable {
 	public String getTenTinhTp() {
 		return quanHuyen.getTenTinhTp();
 	}
+
+	@Transient
+	public int getSoLuongNhaTro() {
+		return khuTros.size();
+	}
 }

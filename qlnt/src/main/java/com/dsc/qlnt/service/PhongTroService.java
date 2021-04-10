@@ -10,4 +10,5 @@ public interface PhongTroService {
     PhongTro layPhongTroTheoId(Integer id);
     void xoa(Integer id) throws Exception;
     Integer demPhongTrong(Integer idKhuTro);
+    List<Object[]> thongKeTheoTinhTrang();
 }

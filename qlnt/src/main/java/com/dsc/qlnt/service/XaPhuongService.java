@@ -2,6 +2,7 @@ package com.dsc.qlnt.service;
 
 import com.dsc.qlnt.model.XaPhuong;
 
+import javax.persistence.OrderBy;
 import java.util.List;
 
 public interface XaPhuongService {

@@ -11,4 +11,6 @@ public interface PhongTroRepository extends CrudRepository<PhongTro, Integer> {
 
     @Query("select count(pt.idPhongTro) from PhongTro pt where pt.tinhTrang.idTinhTrang=1 and pt.loaiPhong.idLoaiPhong in (select lp.idLoaiPhong from LoaiPhong lp where lp.khuTro.idKhuTro=?1)")
     Integer demPhongTroConTrong(Integer inKhuTro);
+    @Query("select pt.tinhTrang, count(pt.idPhongTro) from PhongTro pt group by pt.tinhTrang")
+    List<Object[]> demPhongTroTheoTinhTrang();
 }
