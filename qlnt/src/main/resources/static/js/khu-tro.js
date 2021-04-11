@@ -89,6 +89,10 @@ $(document).ready(function() {
 
     $('#mod-khu-tro').on('hidden.bs.modal', function (e) {
         clear();
+        var grid=$('#lst-truong').data('jdgrid');
+        for(var i=0;i<dsTruong.length;i++) {
+            grid.setCellContent(i,2,'');
+        }
     });
 
     $('#mod-loai-phong').on('shown.bs.modal', function (e) {

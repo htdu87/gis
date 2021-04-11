@@ -72,6 +72,9 @@ public class MapController {
         ArrayNode nodeLoaiPhong=mapper.valueToTree(khuTro.getLoaiPhongs());
         resData.putArray("loaiPhong").addAll(nodeLoaiPhong);
 
+        ArrayNode nodeKhoangCach=mapper.valueToTree(khuTro.getKhoangCaches());
+        resData.putArray("khoangCach").addAll(nodeKhoangCach);
+
         ObjectNode nodeKhuTro=mapper.valueToTree(khuTro);
         resData.set("khuTro",nodeKhuTro);
 

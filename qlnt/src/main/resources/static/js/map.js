@@ -40,6 +40,18 @@ $(document).ready(function(){
         nocss:{'text-align':'center','width':'30px'}
     });
 
+    $('#lst-khoang-cach').jdGrid({
+        columns:[
+            {name:'tenTruong',title:'Tên trường'},
+            {name:'khoangCach',title:'K.Cách (m)',css:{'text-align':'center'}}
+        ],
+        extclass:'tbl-primary',
+        height:'400px',
+        shwno:true,
+        nolabel:'TT',
+        nocss:{'text-align':'center','width':'30px'}
+    });
+
     $('#mod-tt-khu-tro').on('shown.bs.modal', function (e) {
         var button = $(e.relatedTarget);
         var id=button.data('rid');
@@ -215,6 +227,7 @@ function layTtKhuTro(id) {
             if(res.resCode>0) {
                 $('#lst-phong-tro').data('jdgrid').fillData(res.resData.phongTro);
                 $('#lst-loai-phong').data('jdgrid').fillData(res.resData.loaiPhong);
+                $('#lst-khoang-cach').data('jdgrid').fillData(res.resData.khoangCach);
 
                 $('#spn-ten').text(res.resData.khuTro.tenKhuTro);
                 $('#spn-trong').text(res.resData.khuTro.soPhongTrong);
