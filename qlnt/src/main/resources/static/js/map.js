@@ -69,7 +69,7 @@ $(document).ready(function(){
     $('#search-result').height($('#search-result').height()-240);
 
     var mapOptions = {
-        center: [10.0279603,105.7664918],
+        center: [9.1881472,105.15906559999999],
         zoom: 15,
         zoomControl: false
     };
@@ -82,6 +82,7 @@ $(document).ready(function(){
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
+            console.log(position);
             myMap.panTo(new L.latLng(position.coords.latitude,position.coords.longitude));
             $('#txt-lat').val(position.coords.latitude);
             $('#txt-lon').val(position.coords.longitude);
@@ -99,6 +100,28 @@ $(document).ready(function(){
 
             marker.addTo(myMap);
             findAddress(myMap, geoCoder, new L.latLng(position.coords.latitude,position.coords.longitude), function(add) {
+                popup.setContent('<h4>Vị trí của bạn</h4><i>'+add+'</i>');
+            });
+        }, function(err) {
+            //console.log(err);
+            var defLoc=new L.latLng(9.1881472,105.15906559999999);
+
+            $('#txt-lat').val(9.1881472);
+            $('#txt-lon').val(105.15906559999999);
+
+            var marker = new L.marker(defLoc,{title:'Vị trí của bạn',alt:'Vị trí của bạn',draggable:'true'});
+            var popup = L.popup().setContent('<h4>Vị trí của bạn</h4>');
+            marker.bindPopup(popup).openPopup();
+            marker.on('dragend', function(e) {
+                $('#txt-lat').val(marker.getLatLng().lat);
+                $('#txt-lon').val(marker.getLatLng().lng);
+                findAddress(myMap, geoCoder, marker.getLatLng(),function(add) {
+                    popup.setContent('<h4>Vị trí của bạn</h4><i>'+add+'</i>');
+                });
+            });
+
+            marker.addTo(myMap);
+            findAddress(myMap, geoCoder, defLoc, function(add) {
                 popup.setContent('<h4>Vị trí của bạn</h4><i>'+add+'</i>');
             });
         });
